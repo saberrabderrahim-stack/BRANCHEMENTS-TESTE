@@ -16,429 +16,10 @@
   --srm-gray:#f4f6f9; --srm-border:#dce4ef; --srm-text:#1e2d3d; --srm-text-muted:#6b7c93;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Cairo','Segoe UI',sans-serif;background:#eef2f7;color:var(--srm-text);}
-input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!important;}
+body{font-family:'Segoe UI','Cairo',sans-serif;background:#eef2f7;color:var(--srm-text);}
+input,select,textarea{font-size:16px!important;font-family:'Segoe UI','Cairo',sans-serif!important;}
 
-/* LOGIN */
-.login-bg{background:linear-gradient(135deg,#0d2b45 0%,#1a5f96 50%,#2B7FC1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
-.login-card{background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);max-width:420px;width:100%;padding:36px 32px;}
-
-/* HEADER */
-.app-header{background:#fff;border-bottom:1px solid var(--srm-border);padding:10px 16px;position:sticky;top:0;z-index:40;box-shadow:0 1px 4px rgba(43,127,193,0.08);}
-
-/* CARDS */
-.srm-card{background:#fff;border-radius:12px;border:1px solid var(--srm-border);box-shadow:0 1px 6px rgba(43,127,193,0.07);margin-bottom:16px;padding:18px;}
-
-/* شاشة الإدخال بيضاء بالكامل بدون تقطعات */
-.white-card {
-  background: #ffffff !important;
-  border: 1px solid var(--srm-border) !important;
-  box-shadow: none !important;
-}
-
-/* BUTTONS */
-.srm-btn{border:none;border-radius:8px;padding:11px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
-.srm-btn:hover{transform:translateY(-1px);}
-.btn-blue{background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark));color:#fff;box-shadow:0 2px 8px rgba(43,127,193,0.2);}
-.btn-blue:hover{box-shadow:0 4px 14px rgba(43,127,193,0.4);}
-.btn-green{background:linear-gradient(135deg,var(--srm-green),var(--srm-green-dark));color:#fff;box-shadow:0 2px 8px rgba(77,176,91,0.2);}
-.btn-green:hover{box-shadow:0 4px 14px rgba(77,176,91,0.4);}
-.btn-orange{background:linear-gradient(135deg,var(--srm-orange),var(--srm-orange-dark));color:#fff;}
-.btn-purple{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;}
-.btn-ghost{background:var(--srm-blue-light);color:var(--srm-blue);border:1px solid #b8d9f0;}
-.btn-sm{padding:5px 10px;font-size:12px;width:auto;border-radius:6px;}
-.btn-edit{background:linear-gradient(135deg,#f6a623,#e8920e);color:#fff;}
-.btn-del{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}
-
-/* INPUTS */
-.srm-input{width:100%;padding:10px 14px;border:1.5px solid var(--srm-border);border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;background:#f9fbfd;}
-.srm-input:focus{border-color:var(--srm-blue);box-shadow:0 0 0 3px rgba(43,127,193,0.12);background:#fff;}
-.srm-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--srm-text);}
-
-/* RADIO GROUP */
-.radio-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
-.radio-option{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--srm-border);background:#f9fbfd;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
-.radio-option:hover{border-color:var(--srm-blue);background:var(--srm-blue-light);}
-.radio-option input{display:none;}
-.radio-option.selected{border-color:var(--srm-blue);background:var(--srm-blue-light);color:var(--srm-blue);}
-.radio-option.selected-green{border-color:var(--srm-green);background:var(--srm-green-light);color:var(--srm-green-dark);}
-
-/* STAT CARDS */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.stat-card{border-radius:10px;padding:12px 14px;border:1px solid;}
-.stat-blue{background:linear-gradient(135deg,#e8f4fd,#d0eaf9);border-color:#b8d9f0;}
-.stat-green{background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-color:#b3e0ba;}
-.stat-orange{background:linear-gradient(135deg,#fef3eb,#fde4ce);border-color:#f9c9a0;}
-.stat-purple{background:linear-gradient(135deg,#f3eefe,#e5d9fc);border-color:#cbb8f8;}
-.stat-val{font-size:22px;font-weight:900;}
-.stat-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;}
-
-/* COUNTER BADGES */
-.cpt-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-.cpt-badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
-.cpt-1{background:#dbeafe;color:#1d4ed8;}
-.cpt-2{background:#d1fae5;color:#065f46;}
-.cpt-3{background:#fef3c7;color:#92400e;}
-.cpt-4{background:#ede9fe;color:#5b21b6;}
-.cpt-j{background:#fce7f3;color:#9d174d;}
-
-/* TABLE */
-.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--srm-border);}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead tr{background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark));color:#fff;}
-th{padding:10px 8px;text-align:center;font-weight:700;font-size:12px;white-space:nowrap;}
-td{padding:9px 8px;text-align:center;border-bottom:1px solid #eef2f7;}
-tr:nth-child(even) td{background:#f7fbff;}
-tr:hover td{background:#eef6ff;}
-.dn-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:800;}
-.dn-32{background:#dbeafe;color:#1d4ed8;}
-.dn-50{background:#d1fae5;color:#065f46;}
-
-/* SECTION TITLE */
-.section-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--srm-text);margin-bottom:14px;}
-.section-icon{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-
-/* TOAST */
-.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:12px;background:var(--srm-text);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;}
-.toast.show{transform:translateY(0);opacity:1;}
-
-/* ALERT */
-.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:10px;}
-.alert-danger{background:#fff5f5;color:#c53030;border:1px solid #fed7d7;}
-
-.d-none{display:none!important;}
-.app-content{max-width:900px;margin:0 auto;padding:16px;}
-.form-row{display:grid;gap:12px;margin-bottom:14px;}
-.cols-3{grid-template-columns:1fr 1fr 1fr;}
-.cols-2{grid-template-columns:1fr 1fr;}
-@media(max-width:600px){.cols-3{grid-template-columns:1fr 1fr;}.stat-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:400px){.cols-3,.cols-2{grid-template-columns:1fr;}}
-
-/* تنسيقات مخصصة للطباعة والتصدير الـ PDF */
-@media print {
-  body { background: #fff; color: #000; }
-  .app-header, .srm-card:nth-of-type(2), .btn-sm, th:last-child, td:last-child { display: none !important; }
-  .srm-card { border: none !important; box-shadow: none !important; }
-}
-</style>
-</head>
-<body>
-
-<div id="login-page" class="login-bg">
-  <div class="login-card">
-    <div style="text-align:center;margin-bottom:20px;">
-      <img id="login-logo" src="" alt="SRM" style="height:80px;object-fit:contain;display:block;margin:0 auto 10px;">
-      <div style="width:60px;height:3px;margin:0 auto 12px;background:linear-gradient(90deg,var(--srm-blue),var(--srm-green),var(--srm-orange));border-radius:4px;"></div>
-      <div style="font-size:11px;font-weight:700;color:var(--srm-text-muted);text-transform:uppercase;line-height:1.7;">
-        Société Régionale Multiservices<br>Casablanca-Settat SA
-      </div>
-      <div style="font-size:11px;font-weight:800;color:var(--srm-blue);margin-top:2px;">Direction Préfectorale Ain Chock Hay Hassani</div>
-      <h4 style="font-size:17px;font-weight:900;color:var(--srm-text);margin-top:14px;">
-        <i class="fa-solid fa-pipe" style="color:var(--srm-blue);"></i> Gestion des Tronçons
-      </h4>
-      <p style="font-size:12px;color:var(--srm-text-muted);margin-top:2px;">Division Eau Potable — Branchements</p>
-    </div>
-    <div id="login-error" class="alert alert-danger d-none">
-      <i class="fa-solid fa-circle-exclamation"></i> Identifiant ou mot de passe incorrect.
-    </div>
-    <div style="margin-bottom:12px;">
-      <label class="srm-label"><i class="fa-solid fa-user" style="color:var(--srm-blue);margin-right:6px;"></i>Identifiant</label>
-      <input type="text" id="loginUser" class="srm-input" placeholder="Nom d'utilisateur" autocomplete="username">
-    </div>
-    <div style="margin-bottom:20px;">
-      <label class="srm-label"><i class="fa-solid fa-lock" style="color:var(--srm-blue);margin-right:6px;"></i>Mot de passe</label>
-      <input type="password" id="loginPass" class="srm-input" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="srm-btn btn-blue" style="font-size:15px;padding:13px;" onclick="checkLogin()">
-      <i class="fa-solid fa-right-to-bracket"></i> Se connecter
-    </button>
-    <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--srm-border);text-align:center;font-size:11px;color:var(--srm-text-muted);">
-      Département Études & Travaux — Division Eau Potable
-    </div>
-  </div>
-</div>
-
-<div id="main-app" class="d-none">
-
-  <div class="app-header">
-    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img id="app-logo" src="" alt="Logo" style="height:44px;object-fit:contain;">
-        <div style="border-left:1px solid var(--srm-border);padding-left:10px;">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:12px;font-weight:900;color:var(--srm-blue);text-transform:uppercase;letter-spacing:1px;">SRM</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--srm-orange);display:inline-block;"></span>
-            <span style="font-size:12px;font-weight:700;color:#444;">AEP Ain Chock</span>
-          </div>
-          <div style="font-size:11px;color:#666;font-weight:600;">Gestion des Tronçons — Branchements</div>
-          <div style="display:flex;gap:4px;margin-top:2px;">
-            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--srm-blue-light);color:var(--srm-blue);">DIR. PRÉFECTORALE</span>
-            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--srm-green-light);color:var(--srm-green-dark);">EAU POTABLE 💧</span>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div style="padding:6px 12px;border-radius:8px;background:var(--srm-blue-light);border:1px solid #b8d9f0;font-size:12px;font-weight:700;color:var(--srm-blue);">
-          <i class="fa-solid fa-user-tie"></i> <span id="header-user">—</span>
-        </div>
-        <button onclick="handleLogout()" style="padding:7px 10px;border-radius:8px;border:1px solid var(--srm-border);background:#fff;cursor:pointer;color:#888;font-size:14px;">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="app-content" id="pdf-content">
-
-    <div class="srm-card white-card" style="margin-bottom:14px;">
-      <div class="section-title">
-        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-folder-open"></i></span>
-        Informations du Projet
-      </div>
-      <div class="form-row cols-2">
-        <div>
-          <label class="srm-label">Nom du Projet / Réf</label>
-          <input type="text" id="projectName" class="srm-input" placeholder="Ex: Lotissement El首mra, Secteur 4...">
-        </div>
-        <div>
-          <label class="srm-label">Date de Début des Travaux</label>
-          <input type="date" id="projectStartDate" class="srm-input">
-        </div>
-      </div>
-    </div>
-
-    <div class="srm-card" id="dashboard-card">
-      <div class="section-title">
-        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-chart-bar"></i></span>
-        Tableau de Bord — Cumuls
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div style="background:linear-gradient(135deg,#e8f4fd,#d8ecf9);border-radius:10px;padding:14px;border:1px solid #b8d9f0;">
-          <div style="font-size:13px;font-weight:800;color:var(--srm-blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="background:var(--srm-blue);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 32</span>
-            Total linéaire
-          </div>
-          <div style="font-size:28px;font-weight:900;color:var(--srm-blue-dark);" id="total32">0</div>
-          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
-          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
-            Linéaire &gt; 5m : <span id="extra32" style="font-size:14px;">0</span>
-          </div>
-          <div class="cpt-badges" style="margin-top:10px;">
-            <span class="cpt-badge cpt-1">C1: <span id="tot32_C1">0</span></span>
-            <span class="cpt-badge cpt-2">C2: <span id="tot32_C2">0</span></span>
-            <span class="cpt-badge cpt-3">C3: <span id="tot32_C3">0</span></span>
-            <span class="cpt-badge cpt-4">C4: <span id="tot32_C4">0</span></span>
-            <span class="cpt-badge cpt-j">J: <span id="tot32_J">0</span></span>
-          </div>
-        </div>
-        <div style="background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-radius:10px;padding:14px;border:1px solid #b3e0ba;">
-          <div style="font-size:13px;font-weight:800;color:var(--srm-green-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="background:var(--srm-green);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 50</span>
-            Total linéaire
-          </div>
-          <div style="font-size:28px;font-weight:900;color:var(--srm-green-dark);" id="total50">0</div>
-          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
-          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
-            Linéaire &gt; 5m : <span id="extra50" style="font-size:14px;">0</span>
-          </div>
-          <div class="cpt-badges" style="margin-top:10px;">
-            <span class="cpt-badge cpt-1">C1: <span id="tot50_C1">0</span></span>
-            <span class="cpt-badge cpt-2">C2: <span id="tot50_C2">0</span></span>
-            <span class="cpt-badge cpt-3">C3: <span id="tot50_C3">0</span></span>
-            <span class="cpt-badge cpt-4">C4: <span id="tot50_C4">0</span></span>
-            <span class="cpt-badge cpt-j">J: <span id="tot50_J">0</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-        <div class="stat-card stat-blue" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-blue);" id="stat-total-troncons">0</div>
-          <div class="stat-lbl" style="color:var(--srm-blue);">Tronçons</div>
-        </div>
-        <div class="stat-card stat-green" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-green-dark);" id="stat-total-m">0</div>
-          <div class="stat-lbl" style="color:var(--srm-green-dark);">Total mètres</div>
-        </div>
-        <div class="stat-card stat-orange" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-orange-dark);" id="stat-total-cpt">0</div>
-          <div class="stat-lbl" style="color:var(--srm-orange-dark);">Compteurs</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="srm-card white-card" id="form-container">
-      <div class="section-title">
-        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-plus-circle"></i></span>
-        Saisie du Tronçon
-      </div>
-
-      <div class="form-row cols-2">
-        <div>
-          <label class="srm-label">Nom du tronçon</label>
-          <input type="text" id="troncon" class="srm-input" placeholder="Ex: T-01, Rue Hassan II...">
-        </div>
-        <div>
-          <label class="srm-label">Diamètre (DN)</label>
-          <div class="radio-group" id="dn-group">
-            <label class="radio-option" data-val="32">
-              <input type="radio" name="dn" value="32">
-              <i class="fa-solid fa-pipe" style="font-size:11px;"></i> DN 32
-            </label>
-            <label class="radio-option" data-val="50">
-              <input type="radio" name="dn" value="50">
-              <i class="fa-solid fa-pipe" style="font-size:13px;"></i> DN 50
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-bottom:14px;">
-        <label class="srm-label">Nombre de compteurs</label>
-        <div class="radio-group" id="cpt-group">
-          <label class="radio-option" data-val="1"><input type="radio" name="compteurs" value="1">① 1</label>
-          <label class="radio-option" data-val="2"><input type="radio" name="compteurs" value="2">② 2</label>
-          <label class="radio-option" data-val="3"><input type="radio" name="compteurs" value="3">③ 3</label>
-          <label class="radio-option" data-val="4"><input type="radio" name="compteurs" value="4">④ 4</label>
-          <label class="radio-option" data-val="Jonction"><input type="radio" name="compteurs" value="Jonction"><i class="fa-solid fa-link" style="font-size:11px;"></i> Jonction</label>
-        </div>
-      </div>
-
-      <div class="form-row cols-3">
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-road" style="color:var(--srm-blue);font-size:11px;"></i> Chaussée</label>
-          <input type="number" class="srm-input numeric" id="chaussee" value="0" min="0">
-        </div>
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-border-all" style="color:var(--srm-orange);font-size:11px;"></i> Pavé</label>
-          <input type="number" class="srm-input numeric" id="pave" value="0" min="0">
-        </div>
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-table-cells" style="color:var(--srm-green);font-size:11px;"></i> Carrelage O</label>
-          <input type="number" class="srm-input numeric" id="carllageO" value="0" min="0">
-        </div>
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-table-cells-large" style="color:var(--srm-green-dark);font-size:11px;"></i> Carrelage S</label>
-          <input type="number" class="srm-input numeric" id="carllageS" value="0" min="0">
-        </div>
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-cube" style="color:#6b7c93;font-size:11px;"></i> Béton</label>
-          <input type="number" class="srm-input numeric" id="beton" value="0" min="0">
-        </div>
-        <div>
-          <label class="srm-label"><i class="fa-solid fa-mountain" style="color:#92400e;font-size:11px;"></i> TN</label>
-          <input type="number" class="srm-input numeric" id="tn" value="0" min="0">
-        </div>
-      </div>
-
-      <button class="srm-btn btn-blue" onclick="addOrUpdate()" style="margin-top:4px;">
-        <i class="fa-solid fa-plus"></i> <span id="btn-add-label">Ajouter le tronçon</span>
-      </button>
-    </div>
-
-    <div class="srm-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-        <div class="section-title" style="margin-bottom:0;">
-          <span class="section-icon" style="background:var(--srm-gray);color:var(--srm-text-muted);"><i class="fa-solid fa-table"></i></span>
-          Registre des Tronçons
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <input type="file" id="importFile" accept=".xlsx" style="display:none;" onchange="importExcel(this)">
-          <button class="srm-btn btn-orange btn-sm" onclick="document.getElementById('importFile').click()">
-            <i class="fa-solid fa-file-import"></i> Importer XLSX
-          </button>
-          <button class="srm-btn btn-green btn-sm" onclick="exportExcel()">
-            <i class="fa-solid fa-file-excel"></i> Exporter XLSX
-          </button>
-          <button class="srm-btn btn-purple btn-sm" onclick="exportPDF()">
-            <i class="fa-solid fa-file-pdf"></i> Exporter PDF
-          </button>
-          <button class="srm-btn btn-ghost btn-sm" onclick="toggleTable()">
-            <i class="fa-solid fa-eye" id="toggle-icon"></i> <span id="toggle-label">Afficher</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="tableSection" class="d-none">
-        <div class="table-wrap">
-          <table id="tronconTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Tronçon</th>
-                <th>DN</th>
-                <th>Compteurs</th>
-                <th>Total (m)</th>
-                <th>Chaussée</th>
-                <th>Pavé</th>
-                <th>Carl. O</th>
-                <th>Carl. S</th>
-                <th>Béton</th>
-                <th>TN</th>
-                <th>Date Saisie</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr style="background:var(--srm-blue-light);font-weight:800;">
-                <td colspan="4" style="text-align:right;color:var(--srm-blue);padding:10px;">TOTAUX :</td>
-                <td id="foot-total" style="color:var(--srm-blue);font-weight:900;">0</td>
-                <td id="foot-ch" style="color:var(--srm-text-muted);">0</td>
-                <td id="foot-pv" style="color:var(--srm-text-muted);">0</td>
-                <td id="foot-co" style="color:var(--srm-text-muted);">0</td>
-                <td id="foot-cs" style="color:var(--srm-text-muted);">0</td>
-                <td id="foot-bt" style="color:var(--srm-text-muted);">0</td>
-                <td id="foot-tn" style="color:var(--srm-text-muted);">0</td>
-                <td colspan="2"></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div></div><div id="toast" class="toast">
-  <i id="toast-icon" class="fa-solid fa-circle-check" style="color:#68d391;"></i>
-  <span id="toast-text">OK</span>
-</div>
-
-<script>
-const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARcAAAC0CAMAAACJ8pgSAAAA21BMVEX///87i8VNsFvqiEk2icQohMIvhsP7/f71+fxArFAng8Ls8/lIrlY8q0zpgTrq8vjl8+dXtGTD4seAw4jY5vLI3O3pgz+dwd/N3+7h7PXA1+rrjlPzwKaXvd3pfjO50ueQudtTl8v42sxgns5FkchrpNGqyeMAe758rdWFs9h1qdOyzeXyuJj20r5Zm83N59D77OPa7dzu9+9qu3X76d/1ybGLyZOr17Ge0aV+w4frjE/slmDvp30AdrxluXCUzZyw2bXndBrtnm7wr4r54dOi06jncQsnpj3uonZsuty0AAAgAElEQVR4nO19CZuUSPI32EBS0F2oA8WhNDDcoOio7Yy3O+v8d7//J3ojIrmLOtQ+qvc1nke7CpIk85cRkZERkVmCcDr0x7u3D++6DadHLz6vzs8v3v1x1+04LUJUHgCdr17/Qqanx484Ki0yL+66PadBgMqDMZ1ffH581206Afo8RYUj8/auW3X39GgLFgDm3V236naI+VntOaars+17i7j8tlCH7ppWkNmle/PtvS1KZUWRZU3WNE1KzOm9Y3DRE0nTZCAFSNJvr+E3S4Us9iQp1fTmMbhksjSqIVnguvtI4QgWIHk63sfgIkrjCqTmfwIYW5vAIirZ5PYRuDjyrIb0Ntt/Q1TPYBHFZHL/CFwqaVaDUtxmD26ErC1YRM0ZFziMi7pdhRzeaieun0x5q0+iNBGDw7jYynYdsn27/bhmcpW5CJAYGKMih3FJFqoQtUy4x5QuDDXg4o+KHMRlrnVbplNuuy/XSQvaBfskjoocxGVL625je/8oWeyU7A0lDuFiLLLcVBbvHy3pTGCYeChxCJcdNdxzE0ZfFCRRGxZ/h3BZ1LqiZt1BZ66TdmiHsC9wAJcdGurer5GWZxNR7gscwCVdxvV+my9I4nLHgu7+flyMZVi1e6d1X81jQNmy3my6+/tx2aF1Z74KQTjtKAJ7/G51MWuiumPEO827H5cd8/xc6769ePTPqQbl2IvfzjHesZoBUywLUtne3ouLtQzqdEUOsKzgtavPf54eNB0oSDNgdtnxKr+9F5fjtO4XHlI4X61ef3118339Dnp7PkTGoIHTcYsWx1yp+d19uOzSulOP35ch0oLQnFBY7sXFtFtTYHZo3ojf3YfLUbbul9nLH91Kl4+it+ezfk2AUaVFadB4YGAfLjsenGjdvy5mD1+cjJZh51sdOx/Lebk87NwZuQeXHbauNH73P3NYHpz/dWsdP0CPF0琴أهلاً بك. لقد قمت بتعديل الكود الخاص بملفك بشكل كامل ليلبي جميع طلباتك بدقة، مع الحفاظ على التصميم العام المنظم لشركة **SRM Casablanca-Settat**.
-
-إليك نظرة سريعة على التغييرات الجديدة في الملف:
-1. **استيراد ملف Excel وإكمال العمل:** تم إضافة زر **"Importer XLSX"** يتيح لك رفع ملف قديم قمت بتصديره من التطبيق سابقاً، وسيقوم التطبيق فوراً بملء الجدول وتحديث لوحة التحكم (Tableau de Bord) تلقائياً لتكمل عملك من حيث توقفت.
-2. **ربط اسم المشروع وتاريخ الأشغال بالملف:** عند استيراد الملف، سيقوم التطبيق بقراءة اسم المشروع وتاريخ بداية الأشغال وتعبئتها تلقائياً في خانات مخصصة تم إضافتها في الواجهة. وعند التصدير مجدداً، يتم حفظ هذه البيانات داخل نفس الملف.
-3. **استخراج تقرير PDF احترافي:** تم دمج مكتبة `html2pdf.js` لإخراج تقرير PDF منسق وجاهز للطباعة يحتوي على معلومات المشروع، الإحصائيات، وجدول التفاصيل بالكامل بنقرة زر واحدة.
-4. **تعديل الخلفية وتوحيدها:** تم تحويل خلفية شاشة إدخال البيانات بالكامل إلى اللون الأبيض الصافي وإزالة أي تقطعات أو ظلال رمادية لتصبح مريحة للعين.
-5. **إعادة ترتيب الواجهة:** تم نقل فقرة **Tableau de Bord — Cumuls** لتصبح في الأعلى تماماً، تليها فقرة **Saisie du Tronçon**.
-
-يمكنك نسخ الكود الكامل أدناه وحفظه بصيغة `.html` لتشغيله مباشرة:
-
-```html
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Gestion des Tronçons AEP — SRM Casablanca-Settat</title>
-<link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-<link href="[https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap)" rel="stylesheet">
-<script src="[https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js](https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js)"></script>
-<script src="[https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js](https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js)"></script>
-<style>
-:root{
-  --srm-blue:#2B7FC1; --srm-blue-dark:#1a5f96; --srm-blue-light:#e8f4fd;
-  --srm-green:#4DB05B; --srm-green-dark:#3a8c46; --srm-green-light:#eaf7ec;
-  --srm-orange:#E8823E; --srm-orange-dark:#c4662a; --srm-orange-light:#fef3eb;
-  --srm-gray:#f4f6f9; --srm-border:#dce4ef; --srm-text:#1e2d3d; --srm-text-muted:#6b7c93;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Cairo','Segoe UI',sans-serif;background:#eef2f7;color:var(--srm-text);}
-input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!important;}
-
-/* LOGIN */
+/* LOGIN SCREEN */
 .login-bg{background:linear-gradient(135deg,#0d2b45 0%,#1a5f96 50%,#2B7FC1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
 .login-card{background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);max-width:420px;width:100%;padding:36px 32px;}
 
@@ -456,7 +37,7 @@ input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!im
 }
 
 /* BUTTONS */
-.srm-btn{border:none;border-radius:8px;padding:11px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
+.srm-btn{border:none;border-radius:8px;padding:11px 18px;font-family:'Segoe UI','Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
 .srm-btn:hover{transform:translateY(-1px);}
 .btn-blue{background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark));color:#fff;box-shadow:0 2px 8px rgba(43,127,193,0.2);}
 .btn-blue:hover{box-shadow:0 4px 14px rgba(43,127,193,0.4);}
@@ -680,7 +261,7 @@ tr:hover td{background:#eef6ff;}
       </div>
     </div>
 
-    <div class="srm-card white-card">
+    <div class="srm-card white-card" id="form-container">
       <div class="section-title">
         <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-plus-circle"></i></span>
         Saisie du Tronçon
@@ -789,7 +370,7 @@ tr:hover td{background:#eef6ff;}
                 <th>Béton</th>
                 <th>TN</th>
                 <th>Date Saisie</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -811,13 +392,16 @@ tr:hover td{background:#eef6ff;}
       </div>
     </div>
 
-  </div></div><div id="toast" class="toast">
+  </div>
+</div>
+
+<div id="toast" class="toast">
   <i id="toast-icon" class="fa-solid fa-circle-check" style="color:#68d391;"></i>
   <span id="toast-text">OK</span>
 </div>
 
 <script>
-const LOGO_B64 = 'data:image/png;base64,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';
+const LOGO_B64 = 'data:image/png;base64,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';
 
 const USERS = {
   "asaber":     { password:"Al@e16Lokmn23",  displayName:"A. SABER",     role:"Chargé d'Affaires" },
@@ -901,7 +485,7 @@ function addOrUpdate(){
   const cptChecked = document.querySelector('input[name="compteurs"]:checked');
 
   if(!dnChecked || !cptChecked){
-    showToast('Sélectionnez le DN et le nombre de compteurs !', 'error'); return;
+    showToast('Veuillez sélectionner le DN et les compteurs !', 'error'); return;
   }
 
   const dn  = dnChecked.value;
@@ -932,7 +516,7 @@ function addOrUpdate(){
     renderRow(row, troncon, dn, displayCpt, total, ch, pv, co, cs, bt, tn, origTs, editIndex+1);
     editIndex = -1;
     document.getElementById('btn-add-label').textContent = 'Ajouter le tronçon';
-    showToast('Tronçon modifié.');
+    showToast('Tronçon modifié avec succès.');
   }
 
   renumberRows();
@@ -947,7 +531,7 @@ function renderRow(row, troncon, dn, displayCpt, total, ch, pv, co, cs, bt, tn, 
     ? '<span class="dn-badge dn-32">DN 32</span>'
     : '<span class="dn-badge dn-50">DN 50</span>';
   const cptColors = {'1':'cpt-1','2':'cpt-2','3':'cpt-3','4':'cpt-4','J':'cpt-j'};
-  const cptBadge = '<span class="cpt-badge '+( cptColors[displayCpt]||'cpt-j')+'">'+displayCpt+'</span>';
+  const cptBadge = '<span class="cpt-badge '+(cptColors[displayCpt]||'cpt-j')+'">'+displayCpt+'</span>';
   row.innerHTML =
     '<td style="font-weight:700;color:var(--srm-text-muted);font-size:12px;">'+num+'</td>'+
     '<td style="font-weight:700;text-align:left;padding-left:12px;">'+troncon+'</td>'+
@@ -989,7 +573,7 @@ function editRow(btn){
 }
 
 function deleteRow(btn){
-  if(!confirm('Supprimer ce tronçon ?')) return;
+  if(!confirm('Voulez-vous vraiment supprimer ce tronçon ?')) return;
   btn.closest('tr').remove();
   renumberRows();
   saveData();
@@ -1103,7 +687,6 @@ function loadData(){
   }catch(e){ console.error(e); }
 }
 
-/* ── الميزة 1 و 2: تصدير واستيراد ملف Excel مع تفاصيل المشروع تلقائياً ── */
 function exportExcel(){
   const rows = document.querySelectorAll('#tronconTable tbody tr');
   const pName = document.getElementById('projectName').value.trim() || 'Non spécifié';
@@ -1172,7 +755,6 @@ function handleExcelImport(event) {
       return;
     }
 
-    // استخراج معلومات المشروع من السطر الثاني تلقائياً
     if(json[1] && json[1][0] === 'PROJET :') {
       document.getElementById('projectName').value = json[1][1] || '';
       document.getElementById('projectDate').value = json[1][3] || '';
@@ -1181,7 +763,6 @@ function handleExcelImport(event) {
     const tbody = document.querySelector('#tronconTable tbody');
     tbody.innerHTML = '';
 
-    // قراءة البيانات والأسطر ابتداء من السطر الخامس
     for(let i = 4; i < json.length; i++) {
       const rowData = json[i];
       if(!rowData || rowData.length < 5 || rowData[0] === '' || isNaN(rowData[0])) continue;
@@ -1208,17 +789,15 @@ function handleExcelImport(event) {
     if(!tableVisible) toggleTable();
     calculateDashboard();
     saveData();
-    showToast('Données et infos du projet importées !');
+    showToast('Données et informations du projet importées !');
   };
   reader.readAsArrayBuffer(file);
 }
 
-/* ── الميزة 3: استخراج مستند PDF احترافي ── */
 function exportPDF() {
   const element = document.getElementById('pdf-content');
   const pName = document.getElementById('projectName').value.trim() || 'Projet_AEP';
   
-  // إخفاء الأزرار الجانبية الخاصة بالجدول مؤقتاً لكي لا تظهر بالـ PDF
   const actionCells = document.querySelectorAll('#tronconTable th:last-child, #tronconTable td:last-child');
   const formContainer = document.getElementById('form-container');
   
@@ -1234,7 +813,6 @@ function exportPDF() {
   };
 
   html2pdf().set(opt).from(element).save().then(() => {
-    // إعادة إظهار العناصر بعد الانتهاء من استخراج الـ PDF
     actionCells.forEach(el => el.style.display = '');
     if(formContainer) formContainer.style.display = '';
   });
