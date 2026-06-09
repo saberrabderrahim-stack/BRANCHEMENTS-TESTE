@@ -1,252 +1,788 @@
-<!DOCTYPE html>
-<html lang="fr" dir="ltr">
+"""<!DOCTYPE html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Suivi des Travaux AEP - SRM Casablanca-Settat</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Gestion des Tronçons AEP — SRM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root {
-  --srm-blue: #2B7FC1;
-  --srm-blue-dark: #1a5f96;
-  --srm-blue-light: #e8f4fd;
-  --srm-green: #4DB05B;
-  --srm-green-dark: #3a8c46;
-  --srm-green-light: #eaf7ec;
-  --srm-orange: #E8823E;
-  --srm-orange-dark: #c4662a;
-  --srm-orange-light: #fef3eb;
-  --srm-gray: #f4f6f9;
-  --srm-border: #dce4ef;
-  --srm-text: #1e2d3d;
-  --srm-text-muted: #6b7c93;
+:root{
+  --B:#2B7FC1; --Bd:#1a5f96; --Bl:#e8f4fd;
+  --G:#4DB05B; --Gd:#3a8c46; --Gl:#eaf7ec;
+  --O:#E8823E; --Od:#c4662a; --Ol:#fef3eb;
+  --bdr:#dce4ef; --txt:#1e2d3d; --muted:#6b7c93;
 }
-* { box-sizing: border-box; }
-body { font-family: 'Cairo', 'Segoe UI', sans-serif; background: #eef2f7; color: var(--srm-text); }
-.font-mono-custom { font-family: 'JetBrains Mono', monospace; }
-.accordion-content { max-height:0; overflow:hidden; transition:max-height .35s cubic-bezier(0.4,0,0.2,1); }
-.accordion-content.open { max-height:3000px; }
-input,select,textarea { font-size:16px!important; font-family:'Cairo',sans-serif!important; }
-.srm-card { background:#fff; border-radius:12px; border:1px solid var(--srm-border); box-shadow:0 1px 6px rgba(43,127,193,0.07); }
-.srm-badge { background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark)); color:#fff; border-radius:8px; padding:2px 10px; font-size:11px; font-weight:700; }
-.stat-card { border-radius:10px; padding:12px 10px; text-align:center; border:1px solid; }
-.stat-card-blue { background:linear-gradient(135deg,#e8f4fd,#d0eaf9); border-color:#b8d9f0; }
-.stat-card-green { background:linear-gradient(135deg,#eaf7ec,#d5f0d9); border-color:#b3e0ba; }
-.stat-card-orange { background:linear-gradient(135deg,#fef3eb,#fde4ce); border-color:#f9c9a0; }
-.stat-card-purple { background:linear-gradient(135deg,#f3eefe,#e5d9fc); border-color:#cbb8f8; }
-.srm-btn-primary { background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark)); color:#fff; border:none; border-radius:8px; padding:9px 18px; font-family:'Cairo',sans-serif; font-weight:700; font-size:13px; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; gap:6px; }
-.srm-btn-primary:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(43,127,193,0.35); }
-.srm-btn-green { background:linear-gradient(135deg,var(--srm-green),var(--srm-green-dark)); color:#fff; }
-.srm-btn-green:hover { box-shadow:0 4px 14px rgba(77,176,91,0.35); }
-.srm-btn-orange { background:linear-gradient(135deg,var(--srm-orange),var(--srm-orange-dark)); color:#fff; }
-.srm-btn-orange:hover { box-shadow:0 4px 14px rgba(232,130,62,0.35); }
-.srm-btn-danger { background:linear-gradient(135deg,#e53e3e,#c53030); color:#fff; }
-.srm-input { width:100%; padding:10px 14px; border:1.5px solid var(--srm-border); border-radius:8px; outline:none; transition:border-color .2s, box-shadow .2s; background:#f9fbfd; }
-.srm-input:focus { border-color:var(--srm-blue); box-shadow:0 0 0 3px rgba(43,127,193,0.12); background:#fff; }
-.section-header { background:linear-gradient(90deg,#f4f8fc,#fff); border-bottom:2px solid var(--srm-blue-light); }
-.section-header-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; }
-.progress-bar-bg { height:8px; background:#e2e8f0; border-radius:10px; overflow:hidden; }
-.progress-bar-fill { height:100%; border-radius:10px; transition:width .6s ease; }
-.login-bg { background:linear-gradient(135deg,#0d2b45 0%,#1a5f96 50%,#2B7FC1 100%); }
-.login-card { background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.25); }
-.table-row-hover:hover { background:#f0f7ff; }
-.cat-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-.cat-reseau { background:#dbeafe; color:#1d4ed8; }
-.cat-branch { background:#d1fae5; color:#065f46; }
-.cat-remise { background:#fef3c7; color:#92400e; }
-.cat-service { background:#ede9fe; color:#5b21b6; }
-.cat-essais { background:#fce7f3; color:#9d174d; }
-@media (max-width:768px) { body { overflow-x:hidden; } .hide-mobile { display:none; } }
-.shimmer { background:linear-gradient(90deg,#f0f4f8 25%,#e2eaf3 50%,#f0f4f8 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-.accordion-btn { transition:background .2s; }
-.accordion-btn:hover { background:linear-gradient(90deg,#e8f4fd,#f4f8fc); }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Cairo',sans-serif;background:#eef2f7;color:var(--txt);}
+input,select{font-size:16px!important;font-family:'Cairo',sans-serif!important;}
+
+/* LOGIN */
+.login-bg{background:linear-gradient(135deg,#0d2b45,#1a5f96,var(--B));min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
+.login-card{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-width:420px;width:100%;padding:36px 32px;}
+
+/* HEADER */
+.app-header{background:#fff;border-bottom:1px solid var(--bdr);padding:10px 16px;position:sticky;top:0;z-index:40;box-shadow:0 1px 4px rgba(43,127,193,.08);}
+
+/* CARD — fond blanc complet, pas de coupures */
+.srm-card{background:#fff;border-radius:12px;border:1px solid var(--bdr);box-shadow:0 1px 6px rgba(43,127,193,.07);margin-bottom:16px;padding:20px;}
+
+/* BUTTONS */
+.btn{border:none;border-radius:8px;padding:10px 16px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
+.btn:hover{transform:translateY(-1px);}
+.btn-blue{background:linear-gradient(135deg,var(--B),var(--Bd));color:#fff;}
+.btn-blue:hover{box-shadow:0 4px 14px rgba(43,127,193,.4);}
+.btn-green{background:linear-gradient(135deg,var(--G),var(--Gd));color:#fff;}
+.btn-green:hover{box-shadow:0 4px 14px rgba(77,176,91,.4);}
+.btn-red{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}
+.btn-ghost{background:var(--Bl);color:var(--B);border:1px solid #b8d9f0;}
+.btn-ghost-g{background:var(--Gl);color:var(--Gd);border:1px solid #b3e0ba;}
+.btn-sm{padding:6px 12px;font-size:12px;width:auto;border-radius:6px;}
+
+/* INPUTS */
+.inp{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:8px;outline:none;transition:border-color .2s;background:#f9fbfd;}
+.inp:focus{border-color:var(--B);box-shadow:0 0 0 3px rgba(43,127,193,.12);background:#fff;}
+.lbl{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--txt);}
+
+/* RADIO */
+.radio-group{display:flex;flex-wrap:wrap;gap:8px;}
+.ro{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--bdr);background:#f9fbfd;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
+.ro:hover{border-color:var(--B);background:var(--Bl);}
+.ro input{display:none;}
+.ro.sel-b{border-color:var(--B);background:var(--Bl);color:var(--B);}
+.ro.sel-g{border-color:var(--G);background:var(--Gl);color:var(--Gd);}
+
+/* SECTION TITLE */
+.sec-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--txt);margin-bottom:16px;}
+.sec-icon{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.gbtns{display:flex;gap:8px;flex-wrap:wrap;}
+@media(max-width:600px){.g2,.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:380px){.g2{grid-template-columns:1fr;}}
+
+/* DASHBOARD CARDS */
+.dn-box{border-radius:10px;padding:14px;border:1px solid;}
+.dn-blue{background:linear-gradient(135deg,#e8f4fd,#d8ecf9);border-color:#b8d9f0;}
+.dn-green{background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-color:#b3e0ba;}
+.dn-val{font-size:26px;font-weight:900;}
+.dn-lbl{font-size:11px;color:var(--muted);}
+.cpt-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.cpb{padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;}
+.c1{background:#dbeafe;color:#1d4ed8;} .c2{background:#d1fae5;color:#065f46;}
+.c3{background:#fef3c7;color:#92400e;} .c4{background:#ede9fe;color:#5b21b6;}
+.cj{background:#fce7f3;color:#9d174d;}
+.extra-box{font-size:12px;font-weight:700;color:var(--Od);background:var(--Ol);padding:3px 8px;border-radius:6px;display:inline-block;margin-top:6px;}
+
+/* STAT mini */
+.stat3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;}
+.stat-mini{border-radius:8px;padding:10px;text-align:center;border:1px solid var(--bdr);}
+.stat-v{font-size:20px;font-weight:900;}
+.stat-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+
+/* TABLE */
+.twrap{overflow-x:auto;border-radius:8px;border:1px solid var(--bdr);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead tr{background:linear-gradient(135deg,var(--B),var(--Bd));color:#fff;}
+th{padding:9px 7px;text-align:center;font-weight:700;font-size:11px;white-space:nowrap;}
+td{padding:8px 7px;text-align:center;border-bottom:1px solid #eef2f7;}
+tr:nth-child(even) td{background:#f7fbff;}
+tr:hover td{background:#eef6ff;}
+.dn32{background:#dbeafe;color:#1d4ed8;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:800;}
+.dn50{background:#d1fae5;color:#065f46;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:800;}
+tfoot td{background:var(--Bl)!important;font-weight:800;color:var(--B);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:12px;background:var(--txt);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.alert-err{padding:10px 14px;border-radius:8px;font-size:13px;background:#fff5f5;color:#c53030;border:1px solid #fed7d7;margin-bottom:10px;}
+.dn{display:none!important;}
+.app-content{max-width:960px;margin:0 auto;padding:16px;}
 </style>
 </head>
 <body>
 
-<div id="login-page" class="fixed inset-0 login-bg flex items-center justify-center z-50 px-4">
-  <div class="login-card p-8 max-w-md w-full">
-    <div class="text-center mb-8">
-      <div class="flex justify-center mb-4">
-        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-black shadow-lg mb-2">SRM</div>
-      </div>
-      <div class="w-16 h-1 mx-auto rounded mb-4" style="background:linear-gradient(90deg,var(--srm-blue),var(--srm-green),var(--srm-orange))"></div>
-      <h2 class="text-xl font-bold" style="color:var(--srm-text)">Portail de Suivi des Travaux</h2>
-      <p class="text-xs mt-1" style="color:var(--srm-text-muted)">Société Régionale Multiservices Casablanca-Settat SA</p>
-      <p class="text-xs font-semibold mt-0.5" style="color:var(--srm-blue)">Direction Préfectorale Ain Chock Hay Hassani</p>
+<!-- LOGIN -->
+<div id="pg-login" class="login-bg">
+  <div class="login-card">
+    <div style="text-align:center;margin-bottom:20px;">
+      <img id="lg-logo" src="" alt="SRM" style="height:78px;object-fit:contain;display:block;margin:0 auto 10px;">
+      <div style="width:56px;height:3px;margin:0 auto 10px;background:linear-gradient(90deg,var(--B),var(--G),var(--O));border-radius:4px;"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;line-height:1.7;">Société Régionale Multiservices<br>Casablanca-Settat SA</div>
+      <div style="font-size:11px;font-weight:800;color:var(--B);margin-top:2px;">Direction Préfectorale Ain Chock Hay Hassani</div>
+      <h4 style="font-size:17px;font-weight:900;color:var(--txt);margin-top:12px;"><i class="fa-solid fa-pipe" style="color:var(--B);"></i> Gestion des Tronçons</h4>
+      <p style="font-size:12px;color:var(--muted);margin-top:2px;">Division Eau Potable — Branchements</p>
     </div>
-    <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
-      <div>
-        <label class="block text-sm font-semibold mb-1.5" style="color:var(--srm-text)">Identifiant</label>
-        <div class="relative">
-          <input type="text" id="username" required autocomplete="username" class="srm-input pl-10" placeholder="Nom d'utilisateur">
-          <i class="fa-solid fa-user absolute left-3 top-3.5 text-sm" style="color:var(--srm-blue)"></i>
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-semibold mb-1.5" style="color:var(--srm-text)">Mot de passe</label>
-        <div class="relative">
-          <input type="password" id="password" required autocomplete="current-password" class="srm-input pl-10" placeholder="••••••••">
-          <i class="fa-solid fa-lock absolute left-3 top-3.5 text-sm" style="color:var(--srm-blue)"></i>
-        </div>
-      </div>
-      <div id="login-error" class="text-red-600 text-xs hidden flex items-center gap-2 bg-red-50 p-3 rounded-lg border border-red-200">
-        <i class="fa-solid fa-circle-exclamation"></i> Identifiant ou mot de passe incorrect.
-      </div>
-      <button type="submit" class="srm-btn-primary w-full justify-center py-3 text-base mt-2">
-        <i class="fa-solid fa-right-to-bracket"></i> Se connecter
-      </button>
-    </form>
-    <div class="mt-6 pt-4 border-t text-center text-xs" style="color:var(--srm-text-muted); border-color:var(--srm-border)">
-      Renouvellement du Réseau d'Eau Potable &bull; Département Études & Travaux
+    <div id="lg-err" class="alert-err dn"><i class="fa-solid fa-circle-exclamation"></i> Identifiant ou mot de passe incorrect.</div>
+    <div style="margin-bottom:12px;">
+      <label class="lbl"><i class="fa-solid fa-user" style="color:var(--B);margin-right:5px;"></i>Identifiant</label>
+      <input type="text" id="lgU" class="inp" placeholder="Nom d'utilisateur" autocomplete="username">
     </div>
+    <div style="margin-bottom:18px;">
+      <label class="lbl"><i class="fa-solid fa-lock" style="color:var(--B);margin-right:5px;"></i>Mot de passe</label>
+      <input type="password" id="lgP" class="inp" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-blue" style="font-size:15px;padding:13px;" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Se connecter</button>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bdr);text-align:center;font-size:11px;color:var(--muted);">Département Études &amp; Travaux — Division Eau Potable</div>
   </div>
 </div>
 
-<div id="main-app" class="hidden">
+<!-- APP -->
+<div id="pg-app" class="dn">
 
-  <header id="app-header" class="bg-white shadow-sm sticky top-0 z-40 border-b" style="border-color:var(--srm-border)">
-    <div class="max-w-7xl mx-auto px-3 py-2">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-2">
-        <div class="flex items-center gap-3">
-          <div class="text-xl font-black tracking-wider text-blue-600 border-r-2 pr-3 border-gray-300">SRM</div>
-          <div class="pl-1">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase tracking-widest" style="color:var(--srm-blue)">SRM</span>
-              <div class="w-1 h-1 rounded-full" style="background:var(--srm-orange)"></div>
-              <span class="text-xs font-bold uppercase text-gray-700">AEP Ain Chock</span>
-            </div>
-            <p class="text-[11px] font-semibold text-gray-600 leading-tight">Renouvellement du Réseau d'Eau Potable</p>
-            <div class="flex items-center gap-1 mt-0.5">
-              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded" style="background:var(--srm-blue-light);color:var(--srm-blue)">DIR. PRÉFECTORALE</span>
-              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded" style="background:var(--srm-green-light);color:var(--srm-green-dark)">EAU POTABLE 💧</span>
-            </div>
+  <!-- HEADER -->
+  <div class="app-header">
+    <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img id="ap-logo" src="" style="height:44px;object-fit:contain;">
+        <div style="border-left:1px solid var(--bdr);padding-left:10px;">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span style="font-size:12px;font-weight:900;color:var(--B);text-transform:uppercase;letter-spacing:1px;">SRM</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--O);display:inline-block;"></span>
+            <span style="font-size:12px;font-weight:700;color:#444;">AEP Ain Chock</span>
+          </div>
+          <div style="font-size:11px;color:#666;font-weight:600;">Gestion des Tronçons — Branchements</div>
+          <div style="display:flex;gap:4px;margin-top:2px;">
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--Bl);color:var(--B);">DIR. PRÉFECTORALE</span>
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--Gl);color:var(--Gd);">EAU POTABLE 💧</span>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-wrap justify-end">
-          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold" style="background:var(--srm-blue-light);color:var(--srm-blue);border:1px solid #b8d9f0">
-            <i class="fa-solid fa-user-tie"></i><span id="logged-user-name">A.saber</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="padding:6px 12px;border-radius:8px;background:var(--Bl);border:1px solid #b8d9f0;font-size:12px;font-weight:700;color:var(--B);">
+          <i class="fa-solid fa-user-tie"></i> <span id="hdr-user">—</span>
+        </div>
+        <button onclick="doLogout()" style="padding:7px 10px;border-radius:8px;border:1px solid var(--bdr);background:#fff;cursor:pointer;color:#888;font-size:14px;" title="Déconnexion"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-content">
+
+    <!-- ① DASHBOARD (EN HAUT) -->
+    <div class="srm-card">
+      <div class="sec-title">
+        <span class="sec-icon" style="background:var(--Bl);color:var(--B);"><i class="fa-solid fa-chart-bar"></i></span>
+        Tableau de Bord — Cumuls
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="dn-box dn-blue">
+          <div style="font-size:12px;font-weight:800;color:var(--B);margin-bottom:8px;"><span style="background:var(--B);color:#fff;border-radius:5px;padding:1px 8px;font-size:11px;">DN 32</span> Total linéaire</div>
+          <div class="dn-val" style="color:var(--Bd);" id="total32">0</div><div class="dn-lbl">mètres</div>
+          <div class="extra-box">Linéaire &gt; 5m : <span id="extra32">0</span></div>
+          <div class="cpt-badges">
+            <span class="cpb c1">C1:<span id="tot32_C1">0</span></span>
+            <span class="cpb c2">C2:<span id="tot32_C2">0</span></span>
+            <span class="cpb c3">C3:<span id="tot32_C3">0</span></span>
+            <span class="cpb c4">C4:<span id="tot32_C4">0</span></span>
+            <span class="cpb cj">J:<span id="tot32_J">0</span></span>
           </div>
-          <div class="flex flex-col gap-0.5 px-3 py-1.5 rounded-lg border text-xs font-mono-custom" style="background:var(--srm-gray);border-color:var(--srm-border)">
-            <div class="flex items-center gap-2 text-gray-600">
-              <span><i class="fa-regular fa-calendar text-blue-500 mr-1"></i><span id="current-date">--/--/----</span></span>
-              <span class="text-gray-300">|</span>
-              <span><i class="fa-regular fa-clock text-blue-500 mr-1"></i><span id="current-time">--:--:--</span></span>
-            </div>
-            <div class="flex items-center gap-1 text-[10px] text-gray-500 pt-0.5 border-t" style="border-color:var(--srm-border)">
-              <i class="fa-solid fa-location-dot text-red-500"></i>
-              <span id="current-location-text" class="font-semibold">Casablanca, Ain Chock</span>
-            </div>
+        </div>
+        <div class="dn-box dn-green">
+          <div style="font-size:12px;font-weight:800;color:var(--Gd);margin-bottom:8px;"><span style="background:var(--G);color:#fff;border-radius:5px;padding:1px 8px;font-size:11px;">DN 50</span> Total linéaire</div>
+          <div class="dn-val" style="color:var(--Gd);" id="total50">0</div><div class="dn-lbl">mètres</div>
+          <div class="extra-box">Linéaire &gt; 5m : <span id="extra50">0</span></div>
+          <div class="cpt-badges">
+            <span class="cpb c1">C1:<span id="tot50_C1">0</span></span>
+            <span class="cpb c2">C2:<span id="tot50_C2">0</span></span>
+            <span class="cpb c3">C3:<span id="tot50_C3">0</span></span>
+            <span class="cpb c4">C4:<span id="tot50_C4">0</span></span>
+            <span class="cpb cj">J:<span id="tot50_J">0</span></span>
           </div>
-          <button onclick="handleLogout()" class="p-2 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors border" style="border-color:var(--srm-border)">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-          </button>
+        </div>
+      </div>
+      <div class="stat3">
+        <div class="stat-mini" style="background:#e8f4fd;border-color:#b8d9f0;">
+          <div class="stat-v" style="color:var(--B);" id="st-nb">0</div><div class="stat-l" style="color:var(--B);">Tronçons</div>
+        </div>
+        <div class="stat-mini" style="background:var(--Gl);border-color:#b3e0ba;">
+          <div class="stat-v" style="color:var(--Gd);" id="st-m">0</div><div class="stat-l" style="color:var(--Gd);">Total mètres</div>
+        </div>
+        <div class="stat-mini" style="background:var(--Ol);border-color:#f9c9a0;">
+          <div class="stat-v" style="color:var(--Od);" id="st-cpt">0</div><div class="stat-l" style="color:var(--Od);">Compteurs</div>
         </div>
       </div>
     </div>
-  </header>
 
-  <main class="max-w-7xl mx-auto px-3 mt-4 pb-14 space-y-4">
-    <div class="srm-card p-6 text-center">
-      <h3 class="text-lg font-bold text-gray-800 mb-2">🎉 Bienvenue sur votre Tableau de Bord</h3>
-      <p class="text-sm text-gray-600">L'application a été initialisée avec succès avec vos nouveaux identifiants.</p>
+    <!-- ② INFOS PROJET -->
+    <div class="srm-card">
+      <div class="sec-title">
+        <span class="sec-icon" style="background:var(--Bl);color:var(--B);"><i class="fa-solid fa-folder-open"></i></span>
+        Informations du Projet
+      </div>
+      <div class="g2">
+        <div>
+          <label class="lbl"><i class="fa-solid fa-helmet-safety" style="color:var(--B);font-size:11px;margin-right:4px;"></i>Nom du projet / Chantier</label>
+          <input type="text" id="projName" class="inp" placeholder="Ex: Renouvellement branchements Rue..." oninput="saveMeta()">
+        </div>
+        <div>
+          <label class="lbl"><i class="fa-solid fa-calendar-day" style="color:var(--O);font-size:11px;margin-right:4px;"></i>Date de début des travaux</label>
+          <input type="date" id="projDate" class="inp" oninput="saveMeta()">
+        </div>
+      </div>
+      <div class="gbtns">
+        <button class="btn btn-ghost btn-sm" onclick="saveProjectXlsx()" style="flex:1;"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder projet (.xlsx)</button>
+        <input type="file" id="imp-file" style="display:none;" accept=".xlsx,.xls" onchange="importProjectXlsx(event)">
+        <button class="btn btn-ghost-g btn-sm" onclick="document.getElementById('imp-file').click()" style="flex:1;"><i class="fa-solid fa-folder-open"></i> Reprendre un projet (.xlsx)</button>
+      </div>
     </div>
-  </main>
+
+    <!-- ③ SAISIE -->
+    <div class="srm-card">
+      <div class="sec-title">
+        <span class="sec-icon" style="background:var(--Bl);color:var(--B);"><i class="fa-solid fa-plus-circle"></i></span>
+        Saisie du Tronçon
+      </div>
+      <div class="g2">
+        <div>
+          <label class="lbl">Nom du tronçon</label>
+          <input type="text" id="troncon" class="inp" placeholder="Ex: T-01, Rue Hassan II...">
+        </div>
+        <div>
+          <label class="lbl">Diamètre (DN)</label>
+          <div class="radio-group">
+            <label class="ro" data-g="dn" data-v="32"><input type="radio" name="dn" value="32"><i class="fa-solid fa-pipe" style="font-size:11px;"></i> DN 32</label>
+            <label class="ro" data-g="dn" data-v="50"><input type="radio" name="dn" value="50"><i class="fa-solid fa-pipe" style="font-size:13px;"></i> DN 50</label>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label class="lbl">Nombre de compteurs</label>
+        <div class="radio-group">
+          <label class="ro" data-g="cpt" data-v="1"><input type="radio" name="cpt" value="1">① 1</label>
+          <label class="ro" data-g="cpt" data-v="2"><input type="radio" name="cpt" value="2">② 2</label>
+          <label class="ro" data-g="cpt" data-v="3"><input type="radio" name="cpt" value="3">③ 3</label>
+          <label class="ro" data-g="cpt" data-v="4"><input type="radio" name="cpt" value="4">④ 4</label>
+          <label class="ro" data-g="cpt" data-v="Jonction"><input type="radio" name="cpt" value="Jonction"><i class="fa-solid fa-link" style="font-size:11px;"></i> Jonction</label>
+        </div>
+      </div>
+      <div class="g3">
+        <div><label class="lbl"><i class="fa-solid fa-road" style="color:var(--B);font-size:11px;"></i> Chaussée</label><input type="number" class="inp numeric" id="chaussee" value="0" min="0"></div>
+        <div><label class="lbl"><i class="fa-solid fa-border-all" style="color:var(--O);font-size:11px;"></i> Pavé</label><input type="number" class="inp numeric" id="pave" value="0" min="0"></div>
+        <div><label class="lbl"><i class="fa-solid fa-table-cells" style="color:var(--G);font-size:11px;"></i> Carrelage O</label><input type="number" class="inp numeric" id="carllageO" value="0" min="0"></div>
+        <div><label class="lbl"><i class="fa-solid fa-table-cells-large" style="color:var(--Gd);font-size:11px;"></i> Carrelage S</label><input type="number" class="inp numeric" id="carllageS" value="0" min="0"></div>
+        <div><label class="lbl"><i class="fa-solid fa-cube" style="color:var(--muted);font-size:11px;"></i> Béton</label><input type="number" class="inp numeric" id="beton" value="0" min="0"></div>
+        <div><label class="lbl"><i class="fa-solid fa-mountain" style="color:#92400e;font-size:11px;"></i> TN</label><input type="number" class="inp numeric" id="tn" value="0" min="0"></div>
+      </div>
+      <button class="btn btn-blue" onclick="addOrUpdate()"><i class="fa-solid fa-plus"></i> <span id="btn-lbl">Ajouter le tronçon</span></button>
+    </div>
+
+    <!-- ④ TABLEAU -->
+    <div class="srm-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div class="sec-title" style="margin-bottom:0;">
+          <span class="sec-icon" style="background:#f4f6f9;color:var(--muted);"><i class="fa-solid fa-table"></i></span>
+          Registre des Tronçons
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="toggleTable()"><i class="fa-solid fa-eye" id="tog-icon"></i> <span id="tog-lbl">Afficher</span></button>
+          <button class="btn btn-green btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
+          <button class="btn btn-red btn-sm" onclick="exportToPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+        </div>
+      </div>
+      <div id="tbl-section" class="dn">
+        <div class="twrap">
+          <table id="tronconTable">
+            <thead><tr>
+              <th>#</th><th>Tronçon</th><th>DN</th><th>Cpt</th><th>Total(m)</th>
+              <th>Chaussée</th><th>Pavé</th><th>Carl.O</th><th>Carl.S</th><th>Béton</th><th>TN</th>
+              <th>Date Saisie</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+            <tfoot><tr>
+              <td colspan="4" style="text-align:right;padding:9px;">TOTAUX :</td>
+              <td id="ft-tot">0</td><td id="ft-ch">0</td><td id="ft-pv">0</td>
+              <td id="ft-co">0</td><td id="ft-cs">0</td><td id="ft-bt">0</td>
+              <td id="ft-tn">0</td><td colspan="2"></td>
+            </tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div id="toast" class="fixed bottom-5 right-5 hidden z-50 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-10 opacity-0">
-  <span id="toast-icon" class="text-green-400"><i class="fa-solid fa-circle-check"></i></span>
-  <span id="toast-text" class="text-sm font-semibold"></span>
-</div>
+<!-- TOAST -->
+<div id="toast" class="toast"><i id="ti" class="fa-solid fa-circle-check" style="color:#68d391;"></i><span id="tt">OK</span></div>
 
 <script>
-// تحديث اسم المستخدم وكلمة المرور بناءً على طلبك المباشر
-const VALID_USER = "asaber";
-const VALID_PASS = "Al@e16Lokmn23";
+LOGO_PLACEHOLDER
 
-function handleLogin(event) {
-  event.preventDefault();
-  
-  const userField = document.getElementById("username").value.trim();
-  const passField = document.getElementById("password").value.trim();
-  const errorDiv = document.getElementById("login-error");
+const USERS = {
+  "asaber":     { password:"Al@e16Lokmn23",  displayName:"A. SABER",     role:"Chargé d'Affaires" },
+  "bfathi":     { password:"Bfathi590",       displayName:"B. FATHI",     role:"Technicien" },
+  "lbencherki": { password:"Lbencherki2026", displayName:"L. BENCHERKI", role:"Responsable" }
+};
 
-  if (userField.toLowerCase() === VALID_USER.toLowerCase() && passField === VALID_PASS) {
-    errorDiv.classList.add("hidden");
-    
-    document.getElementById("login-page").classList.add("hidden");
-    document.getElementById("main-app").classList.remove("hidden");
-    
-    // يظهر حساب العرض الخاص بك كـ Chargé d'affaires بالاختصار المعتمد
-    document.getElementById("logged-user-name").innerText = "A.saber";
-    
-    sessionStorage.setItem("isLoggedIn", "true");
-    
-    showToast("Connexion réussie. Bienvenue !", "success");
-    initDateTime();
+let editIdx = -1, tblVisible = false, currentUser = null;
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('lg-logo').src = LOGO_B64;
+  document.getElementById('ap-logo').src = LOGO_B64;
+  initRadios();
+  initNumerics();
+  loadData();
+  loadMeta();
+});
+
+// ── Radio styles ──
+function initRadios(){
+  document.querySelectorAll('.ro').forEach(function(lbl){
+    lbl.addEventListener('click', function(){
+      const r = lbl.querySelector('input');
+      const g = lbl.dataset.g;
+      document.querySelectorAll('.ro[data-g="'+g+'"]').forEach(function(x){ x.classList.remove('sel-b','sel-g'); });
+      r.checked = true;
+      lbl.classList.add(g==='dn'?'sel-b':'sel-g');
+    });
+  });
+}
+function setRadio(name, val){
+  document.querySelectorAll('.ro[data-g="'+name+'"]').forEach(function(lbl){
+    lbl.classList.remove('sel-b','sel-g');
+    if(lbl.dataset.v === val){ lbl.querySelector('input').checked=true; lbl.classList.add(name==='dn'?'sel-b':'sel-g'); }
+  });
+}
+
+// ── Numerics ──
+function initNumerics(){
+  document.querySelectorAll('.numeric').forEach(function(inp){
+    inp.addEventListener('focus', function(){ if(this.value==='0') this.value=''; });
+    inp.addEventListener('blur',  function(){ if(this.value==='') this.value='0'; });
+  });
+}
+
+// ── Login / Logout ──
+function doLogin(){
+  const u = document.getElementById('lgU').value.trim();
+  const p = document.getElementById('lgP').value.trim();
+  const usr = USERS[u];
+  if(usr && usr.password===p){
+    currentUser = u;
+    document.getElementById('pg-login').classList.add('dn');
+    document.getElementById('pg-app').classList.remove('dn');
+    document.getElementById('hdr-user').textContent = usr.displayName + ' — ' + usr.role;
+    showToast('Bienvenue, '+usr.displayName+' !');
   } else {
-    errorDiv.classList.remove("hidden");
-    showToast("Identifiant ou mot de passe incorrect.", "error");
+    const e=document.getElementById('lg-err'); e.classList.remove('dn'); setTimeout(function(){ e.classList.add('dn'); },3500);
   }
 }
+function doLogout(){
+  document.getElementById('pg-app').classList.add('dn');
+  document.getElementById('pg-login').classList.remove('dn');
+  document.getElementById('lgU').value=''; document.getElementById('lgP').value='';
+  currentUser=null;
+}
+document.addEventListener('keypress',function(e){ if(e.key==='Enter' && !document.getElementById('pg-login').classList.contains('dn')) doLogin(); });
 
-function handleLogout() {
-  sessionStorage.removeItem("isLoggedIn");
-  document.getElementById("main-app").classList.add("hidden");
-  document.getElementById("login-page").classList.remove("hidden");
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
+// ── Meta (projet name + date) ──
+function saveMeta(){
+  localStorage.setItem('trc_meta', JSON.stringify({
+    name: document.getElementById('projName').value,
+    date: document.getElementById('projDate').value
+  }));
+}
+function loadMeta(){
+  try{
+    const m = JSON.parse(localStorage.getItem('trc_meta')||'{}');
+    document.getElementById('projName').value = m.name||'';
+    document.getElementById('projDate').value = m.date||'';
+  }catch(e){}
 }
 
-function showToast(text, type = "success") {
-  const toast = document.getElementById("toast");
-  const toastText = document.getElementById("toast-text");
-  const toastIcon = document.getElementById("toast-icon");
-  
-  toastText.innerText = text;
-  if(type === "error") {
-    toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
-    toastIcon.className = "text-red-400";
+// ── Add / Update ──
+function addOrUpdate(){
+  const tinp = document.getElementById('troncon');
+  const troncon = tinp.value.trim();
+  const dnR  = document.querySelector('input[name="dn"]:checked');
+  const cptR = document.querySelector('input[name="cpt"]:checked');
+  if(!dnR||!cptR){ showToast('Sélectionnez DN et compteurs !','err'); return; }
+  const dn=dnR.value, cpt=cptR.value, dcpt=cpt==='Jonction'?'J':cpt;
+  const ch=+document.getElementById('chaussee').value||0, pv=+document.getElementById('pave').value||0;
+  const co=+document.getElementById('carllageO').value||0, cs=+document.getElementById('carllageS').value||0;
+  const bt=+document.getElementById('beton').value||0, tn=+document.getElementById('tn').value||0;
+  const total=ch+pv+co+cs+bt+tn;
+  const ts=new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const tbody=document.querySelector('#tronconTable tbody');
+  if(editIdx===-1){
+    const row=tbody.insertRow(); row.setAttribute('data-dn',dn); row.setAttribute('data-ts',ts);
+    renderRow(row,troncon,dn,dcpt,total,ch,pv,co,cs,bt,tn,ts,tbody.rows.length);
+    showToast('Tronçon ajouté : '+(troncon||'—'));
   } else {
-    toastIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-    toastIcon.className = "text-green-400";
+    const row=tbody.rows[editIdx]; const ots=row.getAttribute('data-ts')||ts;
+    row.setAttribute('data-dn',dn);
+    renderRow(row,troncon,dn,dcpt,total,ch,pv,co,cs,bt,tn,ots,editIdx+1);
+    editIdx=-1; document.getElementById('btn-lbl').textContent='Ajouter le tronçon';
+    showToast('Tronçon modifié.');
   }
-  
-  toast.classList.remove("hidden");
-  setTimeout(() => {
-    toast.classList.remove("translate-y-10", "opacity-0");
-  }, 50);
-
-  setTimeout(() => {
-    toast.classList.add("translate-y-10", "opacity-0");
-    setTimeout(() => { toast.classList.add("hidden"); }, 300);
-  }, 3000);
+  renumber(); saveData(); calcDash(); resetF(); tinp.focus();
 }
 
-// تحديث الوقت الفعلي والتاريخ
-function initDateTime() {
-  setInterval(() => {
-    const now = new Date();
-    document.getElementById("current-date").innerText = now.toLocaleDateString('fr-FR');
-    document.getElementById("current-time").innerText = now.toLocaleTimeString('fr-FR');
-  }, 1000);
+function renderRow(row,tron,dn,dcpt,tot,ch,pv,co,cs,bt,tn,ts,n){
+  const dnB = dn==='32'?'<span class="dn32">DN 32</span>':'<span class="dn50">DN 50</span>';
+  const cmap={'1':'c1','2':'c2','3':'c3','4':'c4','J':'cj'};
+  const cB='<span class="cpb '+(cmap[dcpt]||'cj')+'">'+dcpt+'</span>';
+  row.innerHTML=
+    '<td style="font-weight:700;color:var(--muted);font-size:12px;">'+n+'</td>'+
+    '<td style="font-weight:700;text-align:left;padding-left:10px;">'+tron+'</td>'+
+    '<td>'+dnB+'</td><td>'+cB+'</td>'+
+    '<td style="font-weight:800;color:var(--B);">'+tot+'</td>'+
+    '<td>'+ch+'</td><td>'+pv+'</td><td>'+co+'</td><td>'+cs+'</td><td>'+bt+'</td><td>'+tn+'</td>'+
+    '<td style="font-size:11px;color:var(--muted);white-space:nowrap;">'+ts+'</td>'+
+    '<td style="white-space:nowrap;">'+
+      '<button class="btn btn-sm" onclick="editRow(this)" style="background:linear-gradient(135deg,#f6a623,#e8920e);color:#fff;margin-right:3px;"><i class="fa-solid fa-pen"></i></button>'+
+      '<button class="btn btn-sm btn-red" onclick="delRow(this)"><i class="fa-solid fa-trash"></i></button>'+
+    '</td>';
 }
 
-window.onload = function() {
-  if(sessionStorage.getItem("isLoggedIn") === "true") {
-    document.getElementById("login-page").classList.add("hidden");
-    document.getElementById("main-app").classList.remove("hidden");
-    document.getElementById("logged-user-name").innerText = "A.saber";
-    initDateTime();
+function renumber(){ document.querySelectorAll('#tronconTable tbody tr').forEach(function(r,i){ r.cells[0].textContent=i+1; }); }
+
+function editRow(btn){
+  const row=btn.closest('tr'); editIdx=row.rowIndex-1;
+  document.getElementById('troncon').value=row.cells[1].textContent.trim();
+  setRadio('dn',row.getAttribute('data-dn'));
+  let cv=row.cells[3].textContent.trim(); if(cv==='J') cv='Jonction';
+  setRadio('cpt',cv);
+  document.getElementById('chaussee').value=row.cells[5].textContent;
+  document.getElementById('pave').value=row.cells[6].textContent;
+  document.getElementById('carllageO').value=row.cells[7].textContent;
+  document.getElementById('carllageS').value=row.cells[8].textContent;
+  document.getElementById('beton').value=row.cells[9].textContent;
+  document.getElementById('tn').value=row.cells[10].textContent;
+  document.getElementById('btn-lbl').textContent='Enregistrer les modifications';
+  window.scrollTo({top:0,behavior:'smooth'}); showToast('Mode modification.','warn');
+}
+
+function delRow(btn){
+  if(!confirm('Supprimer ce tronçon ?')) return;
+  btn.closest('tr').remove(); renumber(); saveData(); calcDash();
+  showToast('Supprimé.','err');
+}
+
+function resetF(){
+  document.getElementById('troncon').value='';
+  document.querySelectorAll('.ro').forEach(function(x){ x.classList.remove('sel-b','sel-g'); x.querySelector('input').checked=false; });
+  document.querySelectorAll('.numeric').forEach(function(x){ x.value='0'; });
+}
+
+function toggleTable(){
+  tblVisible=!tblVisible;
+  document.getElementById('tbl-section').classList.toggle('dn',!tblVisible);
+  document.getElementById('tog-lbl').textContent=tblVisible?'Masquer':'Afficher';
+  document.getElementById('tog-icon').className=tblVisible?'fa-solid fa-eye-slash':'fa-solid fa-eye';
+}
+
+// ── Dashboard ──
+function calcDash(){
+  let t32=0,t50=0,ex32=0,ex50=0;
+  let c32={1:0,2:0,3:0,4:0,J:0}, c50={1:0,2:0,3:0,4:0,J:0};
+  let totCh=0,totPv=0,totCo=0,totCs=0,totBt=0,totTn=0,totCpt=0;
+  document.querySelectorAll('#tronconTable tbody tr').forEach(function(row){
+    const dn=row.getAttribute('data-dn')||'';
+    const cpt=row.cells[3].textContent.trim();
+    const tot=+row.cells[4].textContent||0;
+    totCh+=+row.cells[5].textContent||0; totPv+=+row.cells[6].textContent||0;
+    totCo+=+row.cells[7].textContent||0; totCs+=+row.cells[8].textContent||0;
+    totBt+=+row.cells[9].textContent||0; totTn+=+row.cells[10].textContent||0;
+    if(cpt!=='J') totCpt+=+cpt||0;
+    if(dn==='32'){ t32+=tot; if(tot>5) ex32+=(tot-5); if(c32[cpt]!==undefined)c32[cpt]++;else c32.J++; }
+    if(dn==='50'){ t50+=tot; if(tot>5) ex50+=(tot-5); if(c50[cpt]!==undefined)c50[cpt]++;else c50.J++; }
+  });
+  document.getElementById('total32').textContent=t32;  document.getElementById('extra32').textContent=ex32;
+  document.getElementById('tot32_C1').textContent=c32[1]; document.getElementById('tot32_C2').textContent=c32[2];
+  document.getElementById('tot32_C3').textContent=c32[3]; document.getElementById('tot32_C4').textContent=c32[4];
+  document.getElementById('tot32_J').textContent=c32.J;
+  document.getElementById('total50').textContent=t50;  document.getElementById('extra50').textContent=ex50;
+  document.getElementById('tot50_C1').textContent=c50[1]; document.getElementById('tot50_C2').textContent=c50[2];
+  document.getElementById('tot50_C3').textContent=c50[3]; document.getElementById('tot50_C4').textContent=c50[4];
+  document.getElementById('tot50_J').textContent=c50.J;
+  const nb=document.querySelectorAll('#tronconTable tbody tr').length;
+  document.getElementById('st-nb').textContent=nb;
+  document.getElementById('st-m').textContent=t32+t50;
+  document.getElementById('st-cpt').textContent=totCpt;
+  document.getElementById('ft-tot').textContent=t32+t50;
+  document.getElementById('ft-ch').textContent=totCh; document.getElementById('ft-pv').textContent=totPv;
+  document.getElementById('ft-co').textContent=totCo; document.getElementById('ft-cs').textContent=totCs;
+  document.getElementById('ft-bt').textContent=totBt; document.getElementById('ft-tn').textContent=totTn;
+}
+
+// ── LocalStorage ──
+function saveData(){
+  const rows=[];
+  document.querySelectorAll('#tronconTable tbody tr').forEach(function(row){
+    rows.push({dn:row.getAttribute('data-dn'),ts:row.getAttribute('data-ts'),html:row.innerHTML});
+  });
+  localStorage.setItem('trc_rows',JSON.stringify(rows));
+}
+function loadData(){
+  try{
+    const rows=JSON.parse(localStorage.getItem('trc_rows')||'[]');
+    const tb=document.querySelector('#tronconTable tbody'); tb.innerHTML='';
+    rows.forEach(function(item){
+      const row=tb.insertRow(); row.setAttribute('data-dn',item.dn); row.setAttribute('data-ts',item.ts||'');
+      row.innerHTML=item.html;
+    });
+    calcDash();
+  }catch(e){}
+}
+
+// ── Save project as XLSX ──
+function saveProjectXlsx(){
+  const proj=document.getElementById('projName').value.trim();
+  const startDate=document.getElementById('projDate').value;
+  const rows=document.querySelectorAll('#tronconTable tbody tr');
+  const now=new Date().toLocaleString('fr-FR');
+  const aoa=[
+    ['##META##',proj,startDate],
+    ['DIRECTION PRÉFECTORALE AIN CHOCK HAY HASSANI — DIVISION EAU POTABLE'],
+    ['Projet :',proj,'','Date début :',startDate,'','Export :',now],
+    [],
+    ['#','Tronçon','DN','Compteurs','Total (m)','Chaussée','Pavé','Carl. O','Carl. S','Béton','TN','Date Saisie']
+  ];
+  rows.forEach(function(row,i){
+    aoa.push([i+1, row.cells[1].textContent.trim(), row.getAttribute('data-dn'),
+      row.cells[3].textContent.trim(),
+      +row.cells[4].textContent||0, +row.cells[5].textContent||0, +row.cells[6].textContent||0,
+      +row.cells[7].textContent||0, +row.cells[8].textContent||0, +row.cells[9].textContent||0,
+      +row.cells[10].textContent||0, row.getAttribute('data-ts')||''
+    ]);
+  });
+  aoa.push([]); aoa.push(['','','','TOTAL (m)',+document.getElementById('ft-tot').textContent||0,
+    +document.getElementById('ft-ch').textContent||0, +document.getElementById('ft-pv').textContent||0,
+    +document.getElementById('ft-co').textContent||0, +document.getElementById('ft-cs').textContent||0,
+    +document.getElementById('ft-bt').textContent||0, +document.getElementById('ft-tn').textContent||0,''
+  ]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa); const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Tronçons');
+  const safe=(proj||'Projet').replace(/[^a-zA-Z0-9_\\u00C0-\\u024F-]/g,'_');
+  XLSX.writeFile(wb,safe+'.xlsx');
+  showToast('Sauvegardé : '+safe+'.xlsx');
+}
+
+// ── Import project from XLSX ──
+function importProjectXlsx(event){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      let projN='', startD='';
+      if(aoa[0]&&String(aoa[0][0])==='##META##'){ projN=String(aoa[0][1]||''); startD=String(aoa[0][2]||''); }
+      document.getElementById('projName').value=projN;
+      document.getElementById('projDate').value=startD;
+      saveMeta();
+      let ds=-1;
+      for(let i=0;i<aoa.length;i++){ if(String(aoa[i][0]).trim()==='#'){ds=i+1;break;} }
+      if(ds===-1){ showToast('Format non reconnu !','err'); return; }
+      const tb=document.querySelector('#tronconTable tbody'); tb.innerHTML='';
+      let imp=0;
+      for(let i=ds;i<aoa.length;i++){
+        const rd=aoa[i];
+        if(!rd[1]||String(rd[1]).startsWith('TOTAL')) continue;
+        const dn=String(rd[2]||'32').trim();
+        const cpt=String(rd[3]||'').trim();
+        const tot=+rd[4]||0, ch=+rd[5]||0, pv=+rd[6]||0, co=+rd[7]||0;
+        const cs=+rd[8]||0, bt=+rd[9]||0, tn=+rd[10]||0;
+        const ts=String(rd[11]||'');
+        const tron=String(rd[1]).trim();
+        const row=tb.insertRow(); row.setAttribute('data-dn',dn); row.setAttribute('data-ts',ts);
+        renderRow(row,tron,dn,cpt,tot,ch,pv,co,cs,bt,tn,ts,tb.rows.length);
+        imp++;
+      }
+      renumber(); saveData(); calcDash();
+      showToast(imp+' tronçon(s) importé(s) — '+( projN||'Projet'));
+    }catch(err){ console.error(err); showToast('Erreur import !','err'); }
+  };
+  reader.readAsBinaryString(file);
+  event.target.value='';
+}
+
+// ── Export Excel (simple) ──
+function exportExcel(){
+  const rows=document.querySelectorAll('#tronconTable tbody tr');
+  if(!rows.length){ showToast('Aucun tronçon !','err'); return; }
+  const proj=document.getElementById('projName').value.trim();
+  const startDate=document.getElementById('projDate').value;
+  const now=new Date().toLocaleString('fr-FR');
+  const aoa=[
+    ['##META##',proj,startDate],
+    ['DIRECTION PRÉFECTORALE AIN CHOCK HAY HASSANI — DIVISION EAU POTABLE'],
+    ['Projet :',proj,'','Date début :',startDate,'','Export :',now],[],
+    ['#','Tronçon','DN','Compteurs','Total (m)','Chaussée','Pavé','Carl. O','Carl. S','Béton','TN','Date Saisie']
+  ];
+  rows.forEach(function(row,i){
+    aoa.push([i+1,row.cells[1].textContent.trim(),row.getAttribute('data-dn'),
+      row.cells[3].textContent.trim(),
+      +row.cells[4].textContent||0, +row.cells[5].textContent||0, +row.cells[6].textContent||0,
+      +row.cells[7].textContent||0, +row.cells[8].textContent||0, +row.cells[9].textContent||0,
+      +row.cells[10].textContent||0, row.getAttribute('data-ts')||''
+    ]);
+  });
+  aoa.push([]); aoa.push(['','','','TOTAL (m)',
+    +document.getElementById('ft-tot').textContent||0,
+    +document.getElementById('ft-ch').textContent||0, +document.getElementById('ft-pv').textContent||0,
+    +document.getElementById('ft-co').textContent||0, +document.getElementById('ft-cs').textContent||0,
+    +document.getElementById('ft-bt').textContent||0, +document.getElementById('ft-tn').textContent||0,''
+  ]);
+  aoa.push([]); aoa.push(['DN 32 — Total :',+document.getElementById('total32').textContent||0,'','Linéaire > 5m :',+document.getElementById('extra32').textContent||0]);
+  aoa.push(['DN 50 — Total :',+document.getElementById('total50').textContent||0,'','Linéaire > 5m :',+document.getElementById('extra50').textContent||0]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa); const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Tronçons');
+  const safe=(proj||'Troncons').replace(/[^a-zA-Z0-9_\\u00C0-\\u024F-]/g,'_');
+  XLSX.writeFile(wb,safe+'_export.xlsx');
+  showToast('Excel exporté !');
+}
+
+// ── QR ──
+function fetchQR(text,cb){
+  var enc=encodeURIComponent(text.substring(0,400));
+  function tryU(url,next){
+    var img=new Image(); img.crossOrigin='anonymous';
+    img.onload=function(){ try{ var cv=document.createElement('canvas'); cv.width=200;cv.height=200; cv.getContext('2d').drawImage(img,0,0); cb(cv.toDataURL('image/png')); }catch(e){next();} };
+    img.onerror=next; setTimeout(next,5000); img.src=url;
   }
+  tryU('https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&data='+enc,
+    function(){ tryU('https://chart.googleapis.com/chart?chs=200x200&cht=qr&choe=UTF-8&chl='+enc, function(){ cb(null); }); });
+}
+
+// ── PDF ──
+function exportToPDF(){
+  const rows=document.querySelectorAll('#tronconTable tbody tr');
+  if(!rows.length){ showToast('Aucun tronçon !','err'); return; }
+  const proj=document.getElementById('projName').value.trim()||'Non spécifié';
+  const startDate=document.getElementById('projDate').value||'—';
+  const uname=currentUser?(USERS[currentUser].displayName||currentUser):'—';
+  const now=new Date();
+  const ds=now.toLocaleDateString('fr-FR'), ts=now.toLocaleTimeString('fr-FR');
+  const t32=+document.getElementById('total32').textContent||0;
+  const t50=+document.getElementById('total50').textContent||0;
+  const qrc='Projet: '+proj+'\\nDébut: '+startDate+'\\nSaisie par: '+uname+'\\nExport: '+ds+' '+ts+'\\nTronçons: '+rows.length+'\\nDN32: '+t32+'m | DN50: '+t50+'m';
+  showToast('Génération PDF...');
+  fetchQR(qrc,function(qrDU){ _pdf(qrDU,proj,startDate,uname,ds,ts); });
+}
+
+function _pdf(qrDU,proj,startDate,uname,ds,ts){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF('l','mm','a4');
+  const pW=doc.internal.pageSize.getWidth(), pH=doc.internal.pageSize.getHeight();
+  const B=[43,127,193], LB=[232,244,253], GR=[244,246,249], DK=[30,45,61];
+
+  function hdr(){
+    doc.setFillColor(...B); doc.rect(0,0,pW,18,'F');
+    try{ if(LOGO_B64) doc.addImage(LOGO_B64,'PNG',3,2,13,13); }catch(e){}
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(6); doc.setFont(undefined,'bold');
+    doc.text('DIRECTION PRÉFECTORALE AIN CHOCK HAY HASSANI',20,6);
+    doc.setFont(undefined,'normal'); doc.setFontSize(5.5);
+    doc.text('DÉPARTEMENT ÉTUDES ET TRAVAUX — DIVISION EAU POTABLE',20,10.5);
+    doc.setFont(undefined,'bold'); doc.setFontSize(9);
+    doc.text(proj.toUpperCase(),pW/2,11,{align:'center'});
+    if(qrDU){ try{ doc.addImage(qrDU,'PNG',pW-18,1.5,14,14); }catch(e){} }
+    doc.setTextColor(...DK);
+  }
+  function ftr(n){ doc.setTextColor(150,160,170); doc.setFontSize(7); doc.text('Page '+n+' — '+ds+' '+ts,pW/2,pH-3,{align:'center'}); }
+
+  hdr();
+  doc.setFillColor(...LB); doc.roundedRect(14,20,pW-28,7,2,2,'F');
+  doc.setFontSize(8); doc.setFont(undefined,'bold'); doc.setTextColor(...B);
+  doc.text('REGISTRE DES TRONÇONS — GESTION DES BRANCHEMENTS AEP',pW/2,24.8,{align:'center'});
+  doc.setTextColor(...DK);
+  let Y=30;
+
+  doc.setFillColor(...GR); doc.roundedRect(14,Y,pW-28,6,1,1,'F');
+  doc.setFontSize(7); doc.setFont(undefined,'bold'); doc.setTextColor(...B);
+  doc.text('INFORMATIONS DU PROJET',16,Y+4.2); doc.setTextColor(...DK); Y+=8;
+
+  doc.autoTable({head:[],body:[['Projet :',proj,'Date début :',startDate],['Établi par :',uname,'Date export :',ds+' '+ts]],
+    startY:Y,styles:{fontSize:7,cellPadding:1.5},
+    columnStyles:{0:{fontStyle:'bold',textColor:B,cellWidth:32},1:{cellWidth:100},2:{fontStyle:'bold',textColor:B,cellWidth:32},3:{cellWidth:100}},
+    margin:{left:14,right:14},tableWidth:pW-28});
+  Y=doc.lastAutoTable.finalY+5;
+
+  // Summary
+  const t32=+document.getElementById('total32').textContent||0;
+  const t50=+document.getElementById('total50').textContent||0;
+  const ex32=+document.getElementById('extra32').textContent||0;
+  const ex50=+document.getElementById('extra50').textContent||0;
+  doc.autoTable({
+    head:[['DN','Total (m)','> 5m','C1','C2','C3','C4','Jonctions']],
+    body:[['DN 32',t32,ex32,document.getElementById('tot32_C1').textContent,document.getElementById('tot32_C2').textContent,document.getElementById('tot32_C3').textContent,document.getElementById('tot32_C4').textContent,document.getElementById('tot32_J').textContent],
+          ['DN 50',t50,ex50,document.getElementById('tot50_C1').textContent,document.getElementById('tot50_C2').textContent,document.getElementById('tot50_C3').textContent,document.getElementById('tot50_C4').textContent,document.getElementById('tot50_J').textContent],
+          ['TOTAL',t32+t50,ex32+ex50,'','','','','']],
+    startY:Y,styles:{fontSize:7,cellPadding:2,halign:'center'},
+    headStyles:{fillColor:B,textColor:[255,255,255],fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[247,251,255]},
+    didParseCell:function(d){ if(d.row.index===2){d.cell.styles.fillColor=LB;d.cell.styles.fontStyle='bold';d.cell.styles.textColor=B;} },
+    margin:{left:14,right:14},tableWidth:pW-28});
+  Y=doc.lastAutoTable.finalY+5;
+
+  const nb=document.querySelectorAll('#tronconTable tbody tr').length;
+  doc.setFillColor(...B); doc.roundedRect(14,Y,pW-28,6,1,1,'F');
+  doc.setFontSize(7); doc.setFont(undefined,'bold'); doc.setTextColor(255,255,255);
+  doc.text('DÉTAIL DES TRONÇONS ('+nb+')',16,Y+4.2); Y+=8;
+
+  const body=[];
+  document.querySelectorAll('#tronconTable tbody tr').forEach(function(row,i){
+    body.push([i+1,row.cells[1].textContent.trim(),row.getAttribute('data-dn'),row.cells[3].textContent.trim(),
+      +row.cells[4].textContent||0,+row.cells[5].textContent||0,+row.cells[6].textContent||0,
+      +row.cells[7].textContent||0,+row.cells[8].textContent||0,+row.cells[9].textContent||0,
+      +row.cells[10].textContent||0,row.getAttribute('data-ts')||'']);
+  });
+  body.push(['','','','TOTAL (m)',+document.getElementById('ft-tot').textContent||0,
+    +document.getElementById('ft-ch').textContent||0,+document.getElementById('ft-pv').textContent||0,
+    +document.getElementById('ft-co').textContent||0,+document.getElementById('ft-cs').textContent||0,
+    +document.getElementById('ft-bt').textContent||0,+document.getElementById('ft-tn').textContent||0,'']);
+
+  doc.autoTable({
+    head:[['#','Tronçon','DN','Cpt','Total(m)','Chaussée','Pavé','Carl.O','Carl.S','Béton','TN','Date Saisie']],
+    body:body,startY:Y,
+    styles:{fontSize:6.5,cellPadding:1.8,overflow:'linebreak'},
+    headStyles:{fillColor:B,textColor:[255,255,255],fontStyle:'bold',fontSize:7},
+    alternateRowStyles:{fillColor:[247,251,255]},
+    columnStyles:{0:{cellWidth:8,halign:'center'},1:{cellWidth:'auto',halign:'left'},2:{cellWidth:13,halign:'center'},
+      3:{cellWidth:10,halign:'center'},4:{cellWidth:18,halign:'center',fontStyle:'bold',textColor:B},
+      5:{cellWidth:18,halign:'center'},6:{cellWidth:14,halign:'center'},7:{cellWidth:14,halign:'center'},
+      8:{cellWidth:14,halign:'center'},9:{cellWidth:13,halign:'center'},10:{cellWidth:12,halign:'center'},
+      11:{cellWidth:26,halign:'center',fontSize:5.5}},
+    didParseCell:function(d){
+      if(d.row.index===body.length-1){d.cell.styles.fillColor=LB;d.cell.styles.fontStyle='bold';d.cell.styles.textColor=B;}
+      if(d.column.index===2&&d.section==='body'&&d.row.index<body.length-1){
+        d.cell.styles.textColor=d.cell.raw==='32'?[29,78,216]:[6,95,70]; d.cell.styles.fontStyle='bold';
+      }
+    },
+    margin:{left:14,right:14},tableWidth:pW-28});
+
+  ftr(1);
+  const safe=(proj||'Troncons').replace(/[^a-zA-Z0-9_\\u00C0-\\u024F-]/g,'_');
+  doc.save(safe+'.pdf');
+  showToast('PDF exporté : '+safe+'.pdf');
+}
+
+// ── Toast ──
+function showToast(msg,type){
+  const t=document.getElementById('toast'), ic=document.getElementById('ti');
+  document.getElementById('tt').textContent=msg;
+  if(type==='err'){t.style.background='#e53e3e';ic.className='fa-solid fa-circle-xmark';ic.style.color='#fff';}
+  else if(type==='warn'){t.style.background='#e8923e';ic.className='fa-solid fa-triangle-exclamation';ic.style.color='#fff';}
+  else{t.style.background='var(--txt)';ic.className='fa-solid fa-circle-check';ic.style.color='#68d391';}
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000);
 }
 </script>
-
 </body>
-</html>
+</html>"""
+
+HTML = HTML.replace('LOGO_PLACEHOLDER', LOGO)
+
+with open('/home/claude/Troncons_AEP.html','w',encoding='utf-8') as f:
+    f.write(HTML)
+print("Done. Size:", len(HTML))
+PYEOF
+python3 /tmp/gen.py
