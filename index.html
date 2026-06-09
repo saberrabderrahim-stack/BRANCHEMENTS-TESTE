@@ -29,7 +29,6 @@ input,select,textarea{font-size:16px!important;font-family:'Segoe UI','Cairo',sa
 /* CARDS */
 .srm-card{background:#fff;border-radius:12px;border:1px solid var(--srm-border);box-shadow:0 1px 6px rgba(43,127,193,0.07);margin-bottom:16px;padding:18px;}
 
-/* Clean white style without borders/breaks for inputs */
 .white-card {
   background: #ffffff !important;
   border: 1px solid var(--srm-border) !important;
@@ -402,8 +401,14 @@ tr:hover td{background:#eef6ff;}
 </div>
 
 <script>
-// Nouveau logo Base64 intégré directement
-const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAACXBIWXMAAAsTAAALEwEAmpwYAAADp0lEQVR4nO3b23KCMBSG4X9FvP9bPVURbE8v5gAtoSgbe9bMc2ZgGvInm9wgpZQCgE8vXQEALIsgAsEgEAgEgUAgCAQCgSAsb67bXC6XwY9brVb9O2y77K67+h9B8f09HA7V9f6FfRAnI8EICBwBgSAQCASBYCCw6hK8A0eAeyAICBwBgSAQCASBwDoPDoFrIAgIHAHuwREgCAgcAYEgEAgEgcCqi8M8eAOCgMAtg0M8uAeOgMAR4B4IAgJHQCAIBAJBYM2DeyAIDASWwT0QBAQCqy4O8+AeOAIERYN7vPMeOAICp3MPDqF7IAgIHAHuwREgCAgcAYEgEAgEgcBaDoevNfHmegeOgEAgCATWfDj8bXEPBIFBYBncA0FAEFgG90AQEASWwT0QBAQCgXUeHALXQBAQOALcgyPAn8XpA4fANRAEBI4Ad+AIEAQEjoBAEAgEgUCYg+92eH/9/e+w7X6G93eI6R8EgcB6vCby+FpBexmOn+mO+y7fA0fAn3W6W+Gat8I1r667vO8g+C6CQ7z6XN+33+V9B8F3YVvBvLruevRdfofgMArbyvXb6Z5/RzCcwray7Sre8+9IIDitYFtF77jNruI9f3wX9v+wLdfNrmL/v36X30EQvgtbwbw62so+CAt7bCsIu+p6eXW46rYCcAnDtpzCMMw7fG0v6B67isMwhL7/6XfRVRzCMAyn73/6XXQVR2AIff/T76KrOALDKGx3GEYwDMPhg763v76wP8S+G0YQfAt9X/vC/hD7bhhB2IXt7wfbX9oE/v9gexCGYfR97QtHwEAgwAgEAsP5eH/pC4bAcD4SDAICYSCQYAQEgUAgwBAIBALC+Xg7gK9pBwICgUAgwBAIBIKwX0WwreAnmAsgEAgwAoJAwN0KBAKBgCDACAgCAUAgIAgEAAFBICAICAIBAIKAICAIBAAIBIJAICAICAIBQEAYCAQEgUAgIBAEAoBAIGD9T9D+E/T7mR9Y9B6F3v7bZ+jX9V0b7Lvd9R3O/7C+I3o7B99f2HZh2Fby7+rNfVfc7jC869Z+p7vevvvOf4f7Fm6z7yz8Owy3Wf9d86663XF4160wDLdZ/13zrrrdsftO10EQfNfrO6zvev+99O8wXGfXWfN/j7Srtuuuy//6IexvEXwXwXdhf0v0d47wXf+P0F8vCAgEgUAgCIQwDAv0m5pAEAixf99DIMS7ZwgEgUBYIP1mJhCexv7bYg6g6M7wSBAIxW8wAisqAsf+WwN9p+idMv7Y1V0vV3S9AOBj/AMAnA9mWh3bUQAAAABJRU5ErkJggg==';
+// Base de données des utilisateurs intégrée
+const USERS = {
+  "A.saber": { password: "123", displayName: "A.saber", role: "Chargé d'affaires" },
+  "admin": { password: "admin", displayName: "Administrateur", role: "Chef de Division" }
+};
+
+// Nouveau logo Base64 intégré
+const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAACXBIWXMAAAsTAAALEwEAmpwYAAADp0lEQVR4nO3b23KCMBSG4X9FvP9bPVURbE8v5gAtoSgbe9bMc2ZgGvInm9wgpZQCgE8vXQEALIsgAsEgEAgEgUAgCAQCgSAsb67bXC6XwY9brVb9O2y77K67+h9B8f09HA7V9f6FfRAnI8EICBwBgSAQCASBYCCw6hK8A0eAeyAICBwBgSAQCASBwDoPDoFrIAgIHAHuwREgCAgcAYEgEAgEgcCqi8M8eAOCgMAtg0M8uAeOgMAR4B4IAgJHQCAIBAJBYM2DeyAIDASWwT0QBAQCqy4O8+AeOAIERYN7vPMeOAICp3MPDqF7IAgIHAHuwREgCAgcAYEgEAgEgcCaDoevNfHmegeOgEAgCATWfDj8bXEPBIFBYBncA0FAEFgG90AQEASWwT0QBAQCgXUeHALXQBAQOALcgyPAn8XpA4fANRAEBI4Ad+AIEAQEjoBAEAgEgUCYg+92eH/9/e+w7X6G93eI6R8EgcB6vCby+FpBexmOn+mO+y7fA0fAn3W6W+Gat8I1r667vO8g+C6CQ7z6XN+33+V9B8F3YVvBvLruevRdfofgMArbyvXb6Z5/RzCcwray7Sre8+9IIDitYFtF77jNruI9f3wX9v+wLdfNrmL/v36X30EQvgtbwbw62so+CAt7bCsIu+p6eXW46rYCcAnDtpzCMMw7fG0v6B67isMwhL7/6XfRVRzCMAyn73/6XXQVR2AIff/T76KrOALDKGx3GEYwDMPhg763v76wP8S+G0YQfAt9X/vC/hD7bhhB2IXt7wfbX9oE/v9gexCGYfR97QtHwEAgwAgEAsP5eH/pC4bAcD4SDAICYSCQYAQEgUAgwBAIBALC+Xg7gK9pBwICgUAgwBAIBIKwX0WwreAnmAsgEAgwAoJAwN0KBAKBgCDACAgCAUAgIAgEAAFBICAICAIBAIKAICAIBAAIBIJAICAICAIBQEAYCAQEgUAgIBAEAoBAIGD9T9D+E/T7mR9Y9B6F3v7bZ+jX9V0b7Lvd9R3O/7C+I3o7B99f2HZh2Fby7+rNfVfc7jC869Z+p7vevvvOf4f7Fm6z7yz8Owy3Wf9d86663XF4160wDLdZ/13zrrrdsftO10EQfNfrO6zvev+99O8wXGfXWfN/j7Srtuuuy//6IexvEXwXwXdhf0v0d47wXf+P0F8vCAgEgUAgCIQwDAv0m5pAEAixf99DIMS7ZwgEgUBYIP1mJhCexv7bYg6g6M7wSBAIxW8wAisqAsf+WwN9p+idMv7Y1V0vV3S9AOBj/AMAnA9mWh3bUQAAAABJRU5ErkJoggling==';
 
 let editIndex = -1;
 let tableVisible = false;
@@ -794,7 +799,6 @@ function exportPDF() {
   const element = document.getElementById('pdf-content');
   const pName = document.getElementById('projectName').value.trim() || 'Projet_AEP';
   
-  // Masquer les boutons et la colonne Actions avant impression
   const actionCells = document.querySelectorAll('.actions-col');
   const formContainer = document.getElementById('form-container');
   const actionButtons = document.getElementById('action-buttons-container');
@@ -803,7 +807,6 @@ function exportPDF() {
   if(formContainer) formContainer.style.display = 'none';
   if(actionButtons) actionButtons.style.display = 'none';
 
-  // S'assurer que le tableau est visible pour html2pdf
   const tableSection = document.getElementById('tableSection');
   const initialTableState = tableSection.classList.contains('d-none');
   tableSection.classList.remove('d-none');
@@ -817,7 +820,6 @@ function exportPDF() {
   };
 
   html2pdf().set(opt).from(element).save().then(() => {
-    // Restaurer l'affichage initial après impression
     actionCells.forEach(el => el.style.display = '');
     if(formContainer) formContainer.style.display = '';
     if(actionButtons) actionButtons.style.display = '';
