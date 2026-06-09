@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
   --srm-blue:#2B7FC1; --srm-blue-dark:#1a5f96; --srm-blue-light:#e8f4fd;
@@ -28,6 +29,13 @@ input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!im
 /* CARDS */
 .srm-card{background:#fff;border-radius:12px;border:1px solid var(--srm-border);box-shadow:0 1px 6px rgba(43,127,193,0.07);margin-bottom:16px;padding:18px;}
 
+/* شاشة الإدخال بيضاء بالكامل بدون تقطعات */
+.white-card {
+  background: #ffffff !important;
+  border: 1px solid var(--srm-border) !important;
+  box-shadow: none !important;
+}
+
 /* BUTTONS */
 .srm-btn{border:none;border-radius:8px;padding:11px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
 .srm-btn:hover{transform:translateY(-1px);}
@@ -36,6 +44,426 @@ input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!im
 .btn-green{background:linear-gradient(135deg,var(--srm-green),var(--srm-green-dark));color:#fff;box-shadow:0 2px 8px rgba(77,176,91,0.2);}
 .btn-green:hover{box-shadow:0 4px 14px rgba(77,176,91,0.4);}
 .btn-orange{background:linear-gradient(135deg,var(--srm-orange),var(--srm-orange-dark));color:#fff;}
+.btn-purple{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;}
+.btn-ghost{background:var(--srm-blue-light);color:var(--srm-blue);border:1px solid #b8d9f0;}
+.btn-sm{padding:5px 10px;font-size:12px;width:auto;border-radius:6px;}
+.btn-edit{background:linear-gradient(135deg,#f6a623,#e8920e);color:#fff;}
+.btn-del{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}
+
+/* INPUTS */
+.srm-input{width:100%;padding:10px 14px;border:1.5px solid var(--srm-border);border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;background:#f9fbfd;}
+.srm-input:focus{border-color:var(--srm-blue);box-shadow:0 0 0 3px rgba(43,127,193,0.12);background:#fff;}
+.srm-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--srm-text);}
+
+/* RADIO GROUP */
+.radio-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+.radio-option{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--srm-border);background:#f9fbfd;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
+.radio-option:hover{border-color:var(--srm-blue);background:var(--srm-blue-light);}
+.radio-option input{display:none;}
+.radio-option.selected{border-color:var(--srm-blue);background:var(--srm-blue-light);color:var(--srm-blue);}
+.radio-option.selected-green{border-color:var(--srm-green);background:var(--srm-green-light);color:var(--srm-green-dark);}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.stat-card{border-radius:10px;padding:12px 14px;border:1px solid;}
+.stat-blue{background:linear-gradient(135deg,#e8f4fd,#d0eaf9);border-color:#b8d9f0;}
+.stat-green{background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-color:#b3e0ba;}
+.stat-orange{background:linear-gradient(135deg,#fef3eb,#fde4ce);border-color:#f9c9a0;}
+.stat-purple{background:linear-gradient(135deg,#f3eefe,#e5d9fc);border-color:#cbb8f8;}
+.stat-val{font-size:22px;font-weight:900;}
+.stat-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;}
+
+/* COUNTER BADGES */
+.cpt-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.cpt-badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.cpt-1{background:#dbeafe;color:#1d4ed8;}
+.cpt-2{background:#d1fae5;color:#065f46;}
+.cpt-3{background:#fef3c7;color:#92400e;}
+.cpt-4{background:#ede9fe;color:#5b21b6;}
+.cpt-j{background:#fce7f3;color:#9d174d;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--srm-border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead tr{background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark));color:#fff;}
+th{padding:10px 8px;text-align:center;font-weight:700;font-size:12px;white-space:nowrap;}
+td{padding:9px 8px;text-align:center;border-bottom:1px solid #eef2f7;}
+tr:nth-child(even) td{background:#f7fbff;}
+tr:hover td{background:#eef6ff;}
+.dn-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:800;}
+.dn-32{background:#dbeafe;color:#1d4ed8;}
+.dn-50{background:#d1fae5;color:#065f46;}
+
+/* SECTION TITLE */
+.section-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--srm-text);margin-bottom:14px;}
+.section-icon{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:12px;background:var(--srm-text);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ALERT */
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:10px;}
+.alert-danger{background:#fff5f5;color:#c53030;border:1px solid #fed7d7;}
+
+.d-none{display:none!important;}
+.app-content{max-width:900px;margin:0 auto;padding:16px;}
+.form-row{display:grid;gap:12px;margin-bottom:14px;}
+.cols-3{grid-template-columns:1fr 1fr 1fr;}
+.cols-2{grid-template-columns:1fr 1fr;}
+@media(max-width:600px){.cols-3{grid-template-columns:1fr 1fr;}.stat-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:400px){.cols-3,.cols-2{grid-template-columns:1fr;}}
+
+/* تنسيقات مخصصة للطباعة والتصدير الـ PDF */
+@media print {
+  body { background: #fff; color: #000; }
+  .app-header, .srm-card:nth-of-type(2), .btn-sm, th:last-child, td:last-child { display: none !important; }
+  .srm-card { border: none !important; box-shadow: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="login-page" class="login-bg">
+  <div class="login-card">
+    <div style="text-align:center;margin-bottom:20px;">
+      <img id="login-logo" src="" alt="SRM" style="height:80px;object-fit:contain;display:block;margin:0 auto 10px;">
+      <div style="width:60px;height:3px;margin:0 auto 12px;background:linear-gradient(90deg,var(--srm-blue),var(--srm-green),var(--srm-orange));border-radius:4px;"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--srm-text-muted);text-transform:uppercase;line-height:1.7;">
+        Société Régionale Multiservices<br>Casablanca-Settat SA
+      </div>
+      <div style="font-size:11px;font-weight:800;color:var(--srm-blue);margin-top:2px;">Direction Préfectorale Ain Chock Hay Hassani</div>
+      <h4 style="font-size:17px;font-weight:900;color:var(--srm-text);margin-top:14px;">
+        <i class="fa-solid fa-pipe" style="color:var(--srm-blue);"></i> Gestion des Tronçons
+      </h4>
+      <p style="font-size:12px;color:var(--srm-text-muted);margin-top:2px;">Division Eau Potable — Branchements</p>
+    </div>
+    <div id="login-error" class="alert alert-danger d-none">
+      <i class="fa-solid fa-circle-exclamation"></i> Identifiant ou mot de passe incorrect.
+    </div>
+    <div style="margin-bottom:12px;">
+      <label class="srm-label"><i class="fa-solid fa-user" style="color:var(--srm-blue);margin-right:6px;"></i>Identifiant</label>
+      <input type="text" id="loginUser" class="srm-input" placeholder="Nom d'utilisateur" autocomplete="username">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label class="srm-label"><i class="fa-solid fa-lock" style="color:var(--srm-blue);margin-right:6px;"></i>Mot de passe</label>
+      <input type="password" id="loginPass" class="srm-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="srm-btn btn-blue" style="font-size:15px;padding:13px;" onclick="checkLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+    </button>
+    <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--srm-border);text-align:center;font-size:11px;color:var(--srm-text-muted);">
+      Département Études & Travaux — Division Eau Potable
+    </div>
+  </div>
+</div>
+
+<div id="main-app" class="d-none">
+
+  <div class="app-header">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img id="app-logo" src="" alt="Logo" style="height:44px;object-fit:contain;">
+        <div style="border-left:1px solid var(--srm-border);padding-left:10px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:12px;font-weight:900;color:var(--srm-blue);text-transform:uppercase;letter-spacing:1px;">SRM</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--srm-orange);display:inline-block;"></span>
+            <span style="font-size:12px;font-weight:700;color:#444;">AEP Ain Chock</span>
+          </div>
+          <div style="font-size:11px;color:#666;font-weight:600;">Gestion des Tronçons — Branchements</div>
+          <div style="display:flex;gap:4px;margin-top:2px;">
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--srm-blue-light);color:var(--srm-blue);">DIR. PRÉFECTORALE</span>
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--srm-green-light);color:var(--srm-green-dark);">EAU POTABLE 💧</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="padding:6px 12px;border-radius:8px;background:var(--srm-blue-light);border:1px solid #b8d9f0;font-size:12px;font-weight:700;color:var(--srm-blue);">
+          <i class="fa-solid fa-user-tie"></i> <span id="header-user">—</span>
+        </div>
+        <button onclick="handleLogout()" style="padding:7px 10px;border-radius:8px;border:1px solid var(--srm-border);background:#fff;cursor:pointer;color:#888;font-size:14px;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-content" id="pdf-content">
+
+    <div class="srm-card white-card" style="margin-bottom:14px;">
+      <div class="section-title">
+        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-folder-open"></i></span>
+        Informations du Projet
+      </div>
+      <div class="form-row cols-2">
+        <div>
+          <label class="srm-label">Nom du Projet / Réf</label>
+          <input type="text" id="projectName" class="srm-input" placeholder="Ex: Lotissement El首mra, Secteur 4...">
+        </div>
+        <div>
+          <label class="srm-label">Date de Début des Travaux</label>
+          <input type="date" id="projectStartDate" class="srm-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="srm-card" id="dashboard-card">
+      <div class="section-title">
+        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-chart-bar"></i></span>
+        Tableau de Bord — Cumuls
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:linear-gradient(135deg,#e8f4fd,#d8ecf9);border-radius:10px;padding:14px;border:1px solid #b8d9f0;">
+          <div style="font-size:13px;font-weight:800;color:var(--srm-blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--srm-blue);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 32</span>
+            Total linéaire
+          </div>
+          <div style="font-size:28px;font-weight:900;color:var(--srm-blue-dark);" id="total32">0</div>
+          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
+          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
+            Linéaire &gt; 5m : <span id="extra32" style="font-size:14px;">0</span>
+          </div>
+          <div class="cpt-badges" style="margin-top:10px;">
+            <span class="cpt-badge cpt-1">C1: <span id="tot32_C1">0</span></span>
+            <span class="cpt-badge cpt-2">C2: <span id="tot32_C2">0</span></span>
+            <span class="cpt-badge cpt-3">C3: <span id="tot32_C3">0</span></span>
+            <span class="cpt-badge cpt-4">C4: <span id="tot32_C4">0</span></span>
+            <span class="cpt-badge cpt-j">J: <span id="tot32_J">0</span></span>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-radius:10px;padding:14px;border:1px solid #b3e0ba;">
+          <div style="font-size:13px;font-weight:800;color:var(--srm-green-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--srm-green);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 50</span>
+            Total linéaire
+          </div>
+          <div style="font-size:28px;font-weight:900;color:var(--srm-green-dark);" id="total50">0</div>
+          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
+          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
+            Linéaire &gt; 5m : <span id="extra50" style="font-size:14px;">0</span>
+          </div>
+          <div class="cpt-badges" style="margin-top:10px;">
+            <span class="cpt-badge cpt-1">C1: <span id="tot50_C1">0</span></span>
+            <span class="cpt-badge cpt-2">C2: <span id="tot50_C2">0</span></span>
+            <span class="cpt-badge cpt-3">C3: <span id="tot50_C3">0</span></span>
+            <span class="cpt-badge cpt-4">C4: <span id="tot50_C4">0</span></span>
+            <span class="cpt-badge cpt-j">J: <span id="tot50_J">0</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div class="stat-card stat-blue" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-blue);" id="stat-total-troncons">0</div>
+          <div class="stat-lbl" style="color:var(--srm-blue);">Tronçons</div>
+        </div>
+        <div class="stat-card stat-green" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-green-dark);" id="stat-total-m">0</div>
+          <div class="stat-lbl" style="color:var(--srm-green-dark);">Total mètres</div>
+        </div>
+        <div class="stat-card stat-orange" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-orange-dark);" id="stat-total-cpt">0</div>
+          <div class="stat-lbl" style="color:var(--srm-orange-dark);">Compteurs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="srm-card white-card" id="form-container">
+      <div class="section-title">
+        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-plus-circle"></i></span>
+        Saisie du Tronçon
+      </div>
+
+      <div class="form-row cols-2">
+        <div>
+          <label class="srm-label">Nom du tronçon</label>
+          <input type="text" id="troncon" class="srm-input" placeholder="Ex: T-01, Rue Hassan II...">
+        </div>
+        <div>
+          <label class="srm-label">Diamètre (DN)</label>
+          <div class="radio-group" id="dn-group">
+            <label class="radio-option" data-val="32">
+              <input type="radio" name="dn" value="32">
+              <i class="fa-solid fa-pipe" style="font-size:11px;"></i> DN 32
+            </label>
+            <label class="radio-option" data-val="50">
+              <input type="radio" name="dn" value="50">
+              <i class="fa-solid fa-pipe" style="font-size:13px;"></i> DN 50
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="srm-label">Nombre de compteurs</label>
+        <div class="radio-group" id="cpt-group">
+          <label class="radio-option" data-val="1"><input type="radio" name="compteurs" value="1">① 1</label>
+          <label class="radio-option" data-val="2"><input type="radio" name="compteurs" value="2">② 2</label>
+          <label class="radio-option" data-val="3"><input type="radio" name="compteurs" value="3">③ 3</label>
+          <label class="radio-option" data-val="4"><input type="radio" name="compteurs" value="4">④ 4</label>
+          <label class="radio-option" data-val="Jonction"><input type="radio" name="compteurs" value="Jonction"><i class="fa-solid fa-link" style="font-size:11px;"></i> Jonction</label>
+        </div>
+      </div>
+
+      <div class="form-row cols-3">
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-road" style="color:var(--srm-blue);font-size:11px;"></i> Chaussée</label>
+          <input type="number" class="srm-input numeric" id="chaussee" value="0" min="0">
+        </div>
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-border-all" style="color:var(--srm-orange);font-size:11px;"></i> Pavé</label>
+          <input type="number" class="srm-input numeric" id="pave" value="0" min="0">
+        </div>
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-table-cells" style="color:var(--srm-green);font-size:11px;"></i> Carrelage O</label>
+          <input type="number" class="srm-input numeric" id="carllageO" value="0" min="0">
+        </div>
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-table-cells-large" style="color:var(--srm-green-dark);font-size:11px;"></i> Carrelage S</label>
+          <input type="number" class="srm-input numeric" id="carllageS" value="0" min="0">
+        </div>
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-cube" style="color:#6b7c93;font-size:11px;"></i> Béton</label>
+          <input type="number" class="srm-input numeric" id="beton" value="0" min="0">
+        </div>
+        <div>
+          <label class="srm-label"><i class="fa-solid fa-mountain" style="color:#92400e;font-size:11px;"></i> TN</label>
+          <input type="number" class="srm-input numeric" id="tn" value="0" min="0">
+        </div>
+      </div>
+
+      <button class="srm-btn btn-blue" onclick="addOrUpdate()" style="margin-top:4px;">
+        <i class="fa-solid fa-plus"></i> <span id="btn-add-label">Ajouter le tronçon</span>
+      </button>
+    </div>
+
+    <div class="srm-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div class="section-title" style="margin-bottom:0;">
+          <span class="section-icon" style="background:var(--srm-gray);color:var(--srm-text-muted);"><i class="fa-solid fa-table"></i></span>
+          Registre des Tronçons
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="file" id="importFile" accept=".xlsx" style="display:none;" onchange="importExcel(this)">
+          <button class="srm-btn btn-orange btn-sm" onclick="document.getElementById('importFile').click()">
+            <i class="fa-solid fa-file-import"></i> Importer XLSX
+          </button>
+          <button class="srm-btn btn-green btn-sm" onclick="exportExcel()">
+            <i class="fa-solid fa-file-excel"></i> Exporter XLSX
+          </button>
+          <button class="srm-btn btn-purple btn-sm" onclick="exportPDF()">
+            <i class="fa-solid fa-file-pdf"></i> Exporter PDF
+          </button>
+          <button class="srm-btn btn-ghost btn-sm" onclick="toggleTable()">
+            <i class="fa-solid fa-eye" id="toggle-icon"></i> <span id="toggle-label">Afficher</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="tableSection" class="d-none">
+        <div class="table-wrap">
+          <table id="tronconTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Tronçon</th>
+                <th>DN</th>
+                <th>Compteurs</th>
+                <th>Total (m)</th>
+                <th>Chaussée</th>
+                <th>Pavé</th>
+                <th>Carl. O</th>
+                <th>Carl. S</th>
+                <th>Béton</th>
+                <th>TN</th>
+                <th>Date Saisie</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr style="background:var(--srm-blue-light);font-weight:800;">
+                <td colspan="4" style="text-align:right;color:var(--srm-blue);padding:10px;">TOTAUX :</td>
+                <td id="foot-total" style="color:var(--srm-blue);font-weight:900;">0</td>
+                <td id="foot-ch" style="color:var(--srm-text-muted);">0</td>
+                <td id="foot-pv" style="color:var(--srm-text-muted);">0</td>
+                <td id="foot-co" style="color:var(--srm-text-muted);">0</td>
+                <td id="foot-cs" style="color:var(--srm-text-muted);">0</td>
+                <td id="foot-bt" style="color:var(--srm-text-muted);">0</td>
+                <td id="foot-tn" style="color:var(--srm-text-muted);">0</td>
+                <td colspan="2"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div></div><div id="toast" class="toast">
+  <i id="toast-icon" class="fa-solid fa-circle-check" style="color:#68d391;"></i>
+  <span id="toast-text">OK</span>
+</div>
+
+<script>
+const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARcAAAC0CAMAAACJ8pgSAAAA21BMVEX///87i8VNsFvqiEk2icQohMIvhsP7/f71+fxArFAng8Ls8/lIrlY8q0zpgTrq8vjl8+dXtGTD4seAw4jY5vLI3O3pgz+dwd/N3+7h7PXA1+rrjlPzwKaXvd3pfjO50ueQudtTl8v42sxgns5FkchrpNGqyeMAe758rdWFs9h1qdOyzeXyuJj20r5Zm83N59D77OPa7dzu9+9qu3X76d/1ybGLyZOr17Ge0aV+w4frjE/slmDvp30AdrxluXCUzZyw2bXndBrtnm7wr4r54dOi06jncQsnpj3uonZsuty0AAAgAElEQVR4nO19CZuUSPI32EBS0F2oA8WhNDDcoOio7Yy3O+v8d7//J3ojIrmLOtQ+qvc1nke7CpIk85cRkZERkVmCcDr0x7u3D++6DadHLz6vzs8v3v1x1+04LUJUHgCdr17/Qqanx484Ki0yL+66PadBgMqDMZ1ffH581206Afo8RYUj8/auW3X39GgLFgDm3V236naI+VntOaars+17i7j8tlCH7ppWkNmle/PtvS1KZUWRZU3WNE1KzOm9Y3DRE0nTZCAFSNJvr+E3S4Us9iQp1fTmMbhksjSqIVnguvtI4QgWIHk63sfgIkrjCqTmfwIYW5vAIirZ5PYRuDjyrIb0Ntt/Q1TPYBHFZHL/CFwqaVaDUtxmD26ErC1YRM0ZFziMi7pdhRzeaieun0x5q0+iNBGDw7jYynYdsn27/bhmcpW5CJAYGKMih3FJFqoQtUy4x5QuDDXg4o+KHMRlrnVbplNuuy/XSQvaBfskjoocxGVL625je/8oWeyU7A0lDuFiLLLcVBbvHy3pTGCYeChxCJcdNdxzE0ZfFCRRGxZ/h3BZ1LqiZt1BZ66TdmiHsC9wAJcdGurer5GWZxNR7gscwCVdxvV+my9I4nLHgu7+flyMZVi1e6d1X81jQNmy3my6+/tx2aF1Z74KQTjtKAJ7/G51MWuiumPEO827H5cd8/xc6769ePTPqQbl2IvfzjHesZoBUywLUtne3ouLtQzqdEUOsKzgtavPf54eNB0oSDNgdtnxKr+9F5fjtO4XHlI4X61ef3118339Dnp7PkTGoIHTcYsWx1yp+d19uOzSulOP35ch0oLQnFBY7sXFtFtTYHZo3ojf3YfLUbbul9nLH91Kl4+it+ezfk2AUaVFadB4YGAfLjsenGjdvy5mD1+cjJZh51sdOx/Lebk87NwZuQeXHbauNH73P3NYHpz/dWsdP0CPF0琴أهلاً بك. لقد قمت بتعديل الكود الخاص بملفك بشكل كامل ليلبي جميع طلباتك بدقة، مع الحفاظ على التصميم العام المنظم لشركة **SRM Casablanca-Settat**.
+
+إليك نظرة سريعة على التغييرات الجديدة في الملف:
+1. **استيراد ملف Excel وإكمال العمل:** تم إضافة زر **"Importer XLSX"** يتيح لك رفع ملف قديم قمت بتصديره من التطبيق سابقاً، وسيقوم التطبيق فوراً بملء الجدول وتحديث لوحة التحكم (Tableau de Bord) تلقائياً لتكمل عملك من حيث توقفت.
+2. **ربط اسم المشروع وتاريخ الأشغال بالملف:** عند استيراد الملف، سيقوم التطبيق بقراءة اسم المشروع وتاريخ بداية الأشغال وتعبئتها تلقائياً في خانات مخصصة تم إضافتها في الواجهة. وعند التصدير مجدداً، يتم حفظ هذه البيانات داخل نفس الملف.
+3. **استخراج تقرير PDF احترافي:** تم دمج مكتبة `html2pdf.js` لإخراج تقرير PDF منسق وجاهز للطباعة يحتوي على معلومات المشروع، الإحصائيات، وجدول التفاصيل بالكامل بنقرة زر واحدة.
+4. **تعديل الخلفية وتوحيدها:** تم تحويل خلفية شاشة إدخال البيانات بالكامل إلى اللون الأبيض الصافي وإزالة أي تقطعات أو ظلال رمادية لتصبح مريحة للعين.
+5. **إعادة ترتيب الواجهة:** تم نقل فقرة **Tableau de Bord — Cumuls** لتصبح في الأعلى تماماً، تليها فقرة **Saisie du Tronçon**.
+
+يمكنك نسخ الكود الكامل أدناه وحفظه بصيغة `.html` لتشغيله مباشرة:
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Gestion des Tronçons AEP — SRM Casablanca-Settat</title>
+<link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+<link href="[https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap)" rel="stylesheet">
+<script src="[https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js](https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js)"></script>
+<script src="[https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js](https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js)"></script>
+<style>
+:root{
+  --srm-blue:#2B7FC1; --srm-blue-dark:#1a5f96; --srm-blue-light:#e8f4fd;
+  --srm-green:#4DB05B; --srm-green-dark:#3a8c46; --srm-green-light:#eaf7ec;
+  --srm-orange:#E8823E; --srm-orange-dark:#c4662a; --srm-orange-light:#fef3eb;
+  --srm-gray:#f4f6f9; --srm-border:#dce4ef; --srm-text:#1e2d3d; --srm-text-muted:#6b7c93;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Cairo','Segoe UI',sans-serif;background:#eef2f7;color:var(--srm-text);}
+input,select,textarea{font-size:16px!important;font-family:'Cairo',sans-serif!important;}
+
+/* LOGIN */
+.login-bg{background:linear-gradient(135deg,#0d2b45 0%,#1a5f96 50%,#2B7FC1 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
+.login-card{background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);max-width:420px;width:100%;padding:36px 32px;}
+
+/* HEADER */
+.app-header{background:#fff;border-bottom:1px solid var(--srm-border);padding:10px 16px;position:sticky;top:0;z-index:40;box-shadow:0 1px 4px rgba(43,127,193,0.08);}
+
+/* CARDS */
+.srm-card{background:#fff;border-radius:12px;border:1px solid var(--srm-border);box-shadow:0 1px 6px rgba(43,127,193,0.07);margin-bottom:16px;padding:18px;}
+
+/* Clean white style without borders/breaks for inputs */
+.white-card {
+  background: #ffffff !important;
+  border: 1px solid var(--srm-border) !important;
+  box-shadow: none !important;
+}
+
+/* BUTTONS */
+.srm-btn{border:none;border-radius:8px;padding:11px 18px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;}
+.srm-btn:hover{transform:translateY(-1px);}
+.btn-blue{background:linear-gradient(135deg,var(--srm-blue),var(--srm-blue-dark));color:#fff;box-shadow:0 2px 8px rgba(43,127,193,0.2);}
+.btn-blue:hover{box-shadow:0 4px 14px rgba(43,127,193,0.4);}
+.btn-green{background:linear-gradient(135deg,var(--srm-green),var(--srm-green-dark));color:#fff;box-shadow:0 2px 8px rgba(77,176,91,0.2);}
+.btn-green:hover{box-shadow:0 4px 14px rgba(77,176,91,0.4);}
+.btn-orange{background:linear-gradient(135deg,var(--srm-orange),var(--srm-orange-dark));color:#fff;}
+.btn-purple{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;}
 .btn-ghost{background:var(--srm-blue-light);color:var(--srm-blue);border:1px solid #b8d9f0;}
 .btn-sm{padding:5px 10px;font-size:12px;width:auto;border-radius:6px;}
 .btn-edit{background:linear-gradient(135deg,#f6a623,#e8920e);color:#fff;}
@@ -108,7 +536,6 @@ tr:hover td{background:#eef6ff;}
 </head>
 <body>
 
-<!-- ══════════════════ LOGIN ══════════════════ -->
 <div id="login-page" class="login-bg">
   <div class="login-card">
     <div style="text-align:center;margin-bottom:20px;">
@@ -143,10 +570,8 @@ tr:hover td{background:#eef6ff;}
   </div>
 </div>
 
-<!-- ══════════════════ APP ══════════════════ -->
 <div id="main-app" class="d-none">
 
-  <!-- HEADER -->
   <div class="app-header">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;">
@@ -175,10 +600,87 @@ tr:hover td{background:#eef6ff;}
     </div>
   </div>
 
-  <div class="app-content">
+  <div class="app-content" id="pdf-content">
 
-    <!-- ── FORMULAIRE ── -->
-    <div class="srm-card">
+    <div class="srm-card white-card">
+      <div class="section-title">
+        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-folder"></i></span>
+        Informations du Projet
+      </div>
+      <div class="form-row cols-2">
+        <div>
+          <label class="srm-label">Nom du Projet</label>
+          <input type="text" id="projectName" class="srm-input" placeholder="Ex: Lotissement Al Ward...">
+        </div>
+        <div>
+          <label class="srm-label">Date Début des Travaux</label>
+          <input type="date" id="projectDate" class="srm-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="srm-card" id="dashboard-card">
+      <div class="section-title">
+        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-chart-bar"></i></span>
+        Tableau de Bord — Cumuls
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:linear-gradient(135deg,#e8f4fd,#d8ecf9);border-radius:10px;padding:14px;border:1px solid #b8d9f0;">
+          <div style="font-size:13px;font-weight:800;color:var(--srm-blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--srm-blue);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 32</span>
+            Total linéaire
+          </div>
+          <div style="font-size:28px;font-weight:900;color:var(--srm-blue-dark);" id="total32">0</div>
+          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
+          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
+            Linéaire &gt; 5m : <span id="extra32" style="font-size:14px;">0</span>
+          </div>
+          <div class="cpt-badges" style="margin-top:10px;">
+            <span class="cpt-badge cpt-1">C1: <span id="tot32_C1">0</span></span>
+            <span class="cpt-badge cpt-2">C2: <span id="tot32_C2">0</span></span>
+            <span class="cpt-badge cpt-3">C3: <span id="tot32_C3">0</span></span>
+            <span class="cpt-badge cpt-4">C4: <span id="tot32_C4">0</span></span>
+            <span class="cpt-badge cpt-j">J: <span id="tot32_J">0</span></span>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-radius:10px;padding:14px;border:1px solid #b3e0ba;">
+          <div style="font-size:13px;font-weight:800;color:var(--srm-green-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--srm-green);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 50</span>
+            Total linéaire
+          </div>
+          <div style="font-size:28px;font-weight:900;color:var(--srm-green-dark);" id="total50">0</div>
+          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
+          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
+            Linéaire &gt; 5m : <span id="extra50" style="font-size:14px;">0</span>
+          </div>
+          <div class="cpt-badges" style="margin-top:10px;">
+            <span class="cpt-badge cpt-1">C1: <span id="tot50_C1">0</span></span>
+            <span class="cpt-badge cpt-2">C2: <span id="tot50_C2">0</span></span>
+            <span class="cpt-badge cpt-3">C3: <span id="tot50_C3">0</span></span>
+            <span class="cpt-badge cpt-4">C4: <span id="tot50_C4">0</span></span>
+            <span class="cpt-badge cpt-j">J: <span id="tot50_J">0</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div class="stat-card stat-blue" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-blue);" id="stat-total-troncons">0</div>
+          <div class="stat-lbl" style="color:var(--srm-blue);">Tronçons</div>
+        </div>
+        <div class="stat-card stat-green" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-green-dark);" id="stat-total-m">0</div>
+          <div class="stat-lbl" style="color:var(--srm-green-dark);">Total mètres</div>
+        </div>
+        <div class="stat-card stat-orange" style="text-align:center;">
+          <div class="stat-val" style="color:var(--srm-orange-dark);" id="stat-total-cpt">0</div>
+          <div class="stat-lbl" style="color:var(--srm-orange-dark);">Compteurs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="srm-card white-card">
       <div class="section-title">
         <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-plus-circle"></i></span>
         Saisie du Tronçon
@@ -247,72 +749,6 @@ tr:hover td{background:#eef6ff;}
       </button>
     </div>
 
-    <!-- ── DASHBOARD ── -->
-    <div class="srm-card" id="dashboard-card">
-      <div class="section-title">
-        <span class="section-icon" style="background:var(--srm-blue-light);color:var(--srm-blue);"><i class="fa-solid fa-chart-bar"></i></span>
-        Tableau de Bord — Cumuls
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <!-- DN 32 -->
-        <div style="background:linear-gradient(135deg,#e8f4fd,#d8ecf9);border-radius:10px;padding:14px;border:1px solid #b8d9f0;">
-          <div style="font-size:13px;font-weight:800;color:var(--srm-blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="background:var(--srm-blue);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 32</span>
-            Total linéaire
-          </div>
-          <div style="font-size:28px;font-weight:900;color:var(--srm-blue-dark);" id="total32">0</div>
-          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
-          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
-            Linéaire &gt; 5m : <span id="extra32" style="font-size:14px;">0</span>
-          </div>
-          <div class="cpt-badges" style="margin-top:10px;">
-            <span class="cpt-badge cpt-1">C1: <span id="tot32_C1">0</span></span>
-            <span class="cpt-badge cpt-2">C2: <span id="tot32_C2">0</span></span>
-            <span class="cpt-badge cpt-3">C3: <span id="tot32_C3">0</span></span>
-            <span class="cpt-badge cpt-4">C4: <span id="tot32_C4">0</span></span>
-            <span class="cpt-badge cpt-j">J: <span id="tot32_J">0</span></span>
-          </div>
-        </div>
-        <!-- DN 50 -->
-        <div style="background:linear-gradient(135deg,#eaf7ec,#d5f0d9);border-radius:10px;padding:14px;border:1px solid #b3e0ba;">
-          <div style="font-size:13px;font-weight:800;color:var(--srm-green-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="background:var(--srm-green);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;">DN 50</span>
-            Total linéaire
-          </div>
-          <div style="font-size:28px;font-weight:900;color:var(--srm-green-dark);" id="total50">0</div>
-          <div style="font-size:11px;color:var(--srm-text-muted);margin-bottom:8px;">mètres</div>
-          <div style="font-size:12px;font-weight:700;color:var(--srm-orange-dark);background:var(--srm-orange-light);padding:4px 8px;border-radius:6px;display:inline-block;">
-            Linéaire &gt; 5m : <span id="extra50" style="font-size:14px;">0</span>
-          </div>
-          <div class="cpt-badges" style="margin-top:10px;">
-            <span class="cpt-badge cpt-1">C1: <span id="tot50_C1">0</span></span>
-            <span class="cpt-badge cpt-2">C2: <span id="tot50_C2">0</span></span>
-            <span class="cpt-badge cpt-3">C3: <span id="tot50_C3">0</span></span>
-            <span class="cpt-badge cpt-4">C4: <span id="tot50_C4">0</span></span>
-            <span class="cpt-badge cpt-j">J: <span id="tot50_J">0</span></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Total général -->
-      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
-        <div class="stat-card stat-blue" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-blue);" id="stat-total-troncons">0</div>
-          <div class="stat-lbl" style="color:var(--srm-blue);">Tronçons</div>
-        </div>
-        <div class="stat-card stat-green" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-green-dark);" id="stat-total-m">0</div>
-          <div class="stat-lbl" style="color:var(--srm-green-dark);">Total mètres</div>
-        </div>
-        <div class="stat-card stat-orange" style="text-align:center;">
-          <div class="stat-val" style="color:var(--srm-orange-dark);" id="stat-total-cpt">0</div>
-          <div class="stat-lbl" style="color:var(--srm-orange-dark);">Compteurs</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── TABLEAU ── -->
     <div class="srm-card">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="section-title" style="margin-bottom:0;">
@@ -320,11 +756,18 @@ tr:hover td{background:#eef6ff;}
           Registre des Tronçons
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="srm-btn btn-ghost btn-sm" onclick="toggleTable()">
-            <i class="fa-solid fa-eye" id="toggle-icon"></i> <span id="toggle-label">Afficher</span>
+          <input type="file" id="excel-file-input" style="display:none" onchange="handleExcelImport(event)">
+          <button class="srm-btn btn-orange btn-sm" onclick="document.getElementById('excel-file-input').click()">
+            <i class="fa-solid fa-file-import"></i> Importer XLSX
           </button>
           <button class="srm-btn btn-green btn-sm" onclick="exportExcel()">
             <i class="fa-solid fa-file-excel"></i> Exporter XLSX
+          </button>
+          <button class="srm-btn btn-blue btn-sm" style="background: linear-gradient(135deg, #e53e3e, #b82c2c)" onclick="exportPDF()">
+            <i class="fa-solid fa-file-pdf"></i> Générer PDF
+          </button>
+          <button class="srm-btn btn-ghost btn-sm" onclick="toggleTable()">
+            <i class="fa-solid fa-eye" id="toggle-icon"></i> <span id="toggle-label">Afficher</span>
           </button>
         </div>
       </div>
@@ -368,17 +811,13 @@ tr:hover td{background:#eef6ff;}
       </div>
     </div>
 
-  </div><!-- /app-content -->
-</div><!-- /main-app -->
-
-<!-- TOAST -->
-<div id="toast" class="toast">
+  </div></div><div id="toast" class="toast">
   <i id="toast-icon" class="fa-solid fa-circle-check" style="color:#68d391;"></i>
   <span id="toast-text">OK</span>
 </div>
 
 <script>
-const LOGO_B64 = 'data:image/png;base64,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';
+const LOGO_B64 = 'data:image/png;base64,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';
 
 const USERS = {
   "asaber":     { password:"Al@e16Lokmn23",  displayName:"A. SABER",     role:"Chargé d'Affaires" },
@@ -389,7 +828,6 @@ const USERS = {
 let editIndex = -1;
 let tableVisible = false;
 
-// ── Init ──
 document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('login-logo').src = LOGO_B64;
   document.getElementById('app-logo').src = LOGO_B64;
@@ -398,7 +836,6 @@ document.addEventListener('DOMContentLoaded', function(){
   loadData();
 });
 
-// ── Radio visual style ──
 function initRadioStyles(){
   document.querySelectorAll('.radio-option').forEach(function(lbl){
     lbl.addEventListener('click', function(){
@@ -423,7 +860,6 @@ function setRadioVisual(name, val){
   });
 }
 
-// ── Numeric focus ──
 function initNumericInputs(){
   document.querySelectorAll('.numeric').forEach(function(inp){
     inp.addEventListener('focus', function(){ if(this.value==='0') this.value=''; });
@@ -431,7 +867,6 @@ function initNumericInputs(){
   });
 }
 
-// ── Login ──
 function checkLogin(){
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value.trim();
@@ -459,7 +894,6 @@ document.addEventListener('keypress', function(e){
   if(e.key==='Enter' && !document.getElementById('login-page').classList.contains('d-none')) checkLogin();
 });
 
-// ── Add / Update ──
 function addOrUpdate(){
   const tronconInput = document.getElementById('troncon');
   const troncon = tronconInput.value.trim();
@@ -483,7 +917,6 @@ function addOrUpdate(){
   const total = ch+pv+co+cs+bt+tn;
 
   const ts = new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-
   const tbody = document.querySelector('#tronconTable tbody');
 
   if(editIndex === -1){
@@ -535,7 +968,6 @@ function renumberRows(){
   });
 }
 
-// ── Edit / Delete ──
 function editRow(btn){
   const row = btn.closest('tr');
   editIndex = row.rowIndex - 1;
@@ -565,7 +997,6 @@ function deleteRow(btn){
   showToast('Tronçon supprimé.', 'error');
 }
 
-// ── Reset ──
 function resetFields(){
   document.getElementById('troncon').value = '';
   document.querySelectorAll('input[name="dn"], input[name="compteurs"]').forEach(function(r){
@@ -575,7 +1006,6 @@ function resetFields(){
   document.querySelectorAll('.numeric').forEach(function(i){ i.value='0'; });
 }
 
-// ── Toggle table ──
 function toggleTable(){
   tableVisible = !tableVisible;
   document.getElementById('tableSection').classList.toggle('d-none', !tableVisible);
@@ -583,7 +1013,6 @@ function toggleTable(){
   document.getElementById('toggle-icon').className = tableVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
 }
 
-// ── Dashboard ──
 function calculateDashboard(){
   let t32=0,t50=0,ex32=0,ex50=0;
   let c32={1:0,2:0,3:0,4:0,J:0}, c50={1:0,2:0,3:0,4:0,J:0};
@@ -634,7 +1063,6 @@ function calculateDashboard(){
   document.getElementById('stat-total-m').textContent = t32+t50;
   document.getElementById('stat-total-cpt').textContent = totalCpt;
 
-  // Footer totals
   document.getElementById('foot-total').textContent = t32+t50;
   document.getElementById('foot-ch').textContent = totCh;
   document.getElementById('foot-pv').textContent = totPv;
@@ -644,23 +1072,28 @@ function calculateDashboard(){
   document.getElementById('foot-tn').textContent = totTn;
 }
 
-// ── Save / Load ──
 function saveData(){
   const rows = [];
   document.querySelectorAll('#tronconTable tbody tr').forEach(function(row){
     rows.push({ dn: row.getAttribute('data-dn'), ts: row.getAttribute('data-ts'), html: row.innerHTML });
   });
-  localStorage.setItem('troncons_data', JSON.stringify(rows));
+  const pName = document.getElementById('projectName').value;
+  const pDate = document.getElementById('projectDate').value;
+  localStorage.setItem('troncons_data', JSON.stringify({pName, pDate, rows}));
 }
 
 function loadData(){
   const data = localStorage.getItem('troncons_data');
   if(!data) return;
   try{
-    const rows = JSON.parse(data);
+    const parsed = JSON.parse(data);
+    if(parsed.pName) document.getElementById('projectName').value = parsed.pName;
+    if(parsed.pDate) document.getElementById('projectDate').value = parsed.pDate;
+    
+    const targetRows = parsed.rows || parsed; 
     const tbody = document.querySelector('#tronconTable tbody');
     tbody.innerHTML = '';
-    rows.forEach(function(item){
+    targetRows.forEach(function(item){
       const row = tbody.insertRow();
       row.setAttribute('data-dn', item.dn);
       row.setAttribute('data-ts', item.ts||'');
@@ -670,15 +1103,17 @@ function loadData(){
   }catch(e){ console.error(e); }
 }
 
-// ── Export Excel ──
+/* ── الميزة 1 و 2: تصدير واستيراد ملف Excel مع تفاصيل المشروع تلقائياً ── */
 function exportExcel(){
   const rows = document.querySelectorAll('#tronconTable tbody tr');
-  if(rows.length===0){ showToast('Aucun tronçon à exporter !','error'); return; }
+  const pName = document.getElementById('projectName').value.trim() || 'Non spécifié';
+  const pDate = document.getElementById('projectDate').value || 'Non spécifiée';
 
   const now = new Date().toLocaleString('fr-FR');
   const aoa = [
-    ['DIRECTION PRÉFECTORALE AIN CHOCK HAY HASSANI — DIVISION EAU POTABLE'],
-    ['Export Tronçons','','Date :',now],
+    ['SRM CASABLANCA-SETTAT SA — DIRECTION PRÉFECTORALE AIN CHOCK HAY HASSANI'],
+    ['PROJET :', pName, 'DEBUT DES TRAVAUX :', pDate],
+    ['Export des données en date du :', now],
     [],
     ['#','Tronçon','DN','Compteurs','Total (m)','Chaussée','Pavé','Carl. O','Carl. S','Béton','TN','Date Saisie']
   ];
@@ -700,11 +1135,10 @@ function exportExcel(){
     ]);
   });
 
-  // Totals row
   aoa.push([]);
   const t32 = Number(document.getElementById('total32').textContent)||0;
   const t50 = Number(document.getElementById('total50').textContent)||0;
-  aoa.push(['','','','TOTAL (m) :',t32+t50,
+  aoa.push(['','','','TOTAL GENERAL :', t32+t50,
     Number(document.getElementById('foot-ch').textContent)||0,
     Number(document.getElementById('foot-pv').textContent)||0,
     Number(document.getElementById('foot-co').textContent)||0,
@@ -712,19 +1146,100 @@ function exportExcel(){
     Number(document.getElementById('foot-bt').textContent)||0,
     Number(document.getElementById('foot-tn').textContent)||0,''
   ]);
-  aoa.push([]);
-  aoa.push(['DN 32 — Total :',t32,'','Linéaire > 5m :',Number(document.getElementById('extra32').textContent)||0]);
-  aoa.push(['DN 50 — Total :',t50,'','Linéaire > 5m :',Number(document.getElementById('extra50').textContent)||0]);
 
   const ws = XLSX.utils.aoa_to_sheet(aoa);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Tronçons');
-  const fname = 'Troncons_AEP_' + new Date().toLocaleDateString('fr-FR').replace(/\//g,'-') + '.xlsx';
+  const fname = 'AEP_' + pName.replace(/[^a-z0-9]/gi, '_') + '_' + pDate + '.xlsx';
   XLSX.writeFile(wb, fname);
-  showToast('Fichier Excel exporté !');
+  showToast('Fichier Excel exporté avec succès !');
 }
 
-// ── Toast ──
+function handleExcelImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, {type: 'array'});
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+    if(json.length < 5) {
+      showToast('Le format du fichier Excel est incorrect.', 'error');
+      return;
+    }
+
+    // استخراج معلومات المشروع من السطر الثاني تلقائياً
+    if(json[1] && json[1][0] === 'PROJET :') {
+      document.getElementById('projectName').value = json[1][1] || '';
+      document.getElementById('projectDate').value = json[1][3] || '';
+    }
+
+    const tbody = document.querySelector('#tronconTable tbody');
+    tbody.innerHTML = '';
+
+    // قراءة البيانات والأسطر ابتداء من السطر الخامس
+    for(let i = 4; i < json.length; i++) {
+      const rowData = json[i];
+      if(!rowData || rowData.length < 5 || rowData[0] === '' || isNaN(rowData[0])) continue;
+
+      const num = rowData[0];
+      const troncon = rowData[1] || '';
+      const dn = String(rowData[2] || '32');
+      const displayCpt = rowData[3] || 'J';
+      const ch = Number(rowData[5])||0;
+      const pv = Number(rowData[6])||0;
+      const co = Number(rowData[7])||0;
+      const cs = Number(rowData[8])||0;
+      const bt = Number(rowData[9])||0;
+      const tn = Number(rowData[10])||0;
+      const total = ch+pv+co+cs+bt+tn;
+      const ts = rowData[11] || '';
+
+      const row = tbody.insertRow();
+      row.setAttribute('data-dn', dn);
+      row.setAttribute('data-ts', ts);
+      renderRow(row, troncon, dn, displayCpt, total, ch, pv, co, cs, bt, tn, ts, num);
+    }
+
+    if(!tableVisible) toggleTable();
+    calculateDashboard();
+    saveData();
+    showToast('Données et infos du projet importées !');
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ── الميزة 3: استخراج مستند PDF احترافي ── */
+function exportPDF() {
+  const element = document.getElementById('pdf-content');
+  const pName = document.getElementById('projectName').value.trim() || 'Projet_AEP';
+  
+  // إخفاء الأزرار الجانبية الخاصة بالجدول مؤقتاً لكي لا تظهر بالـ PDF
+  const actionCells = document.querySelectorAll('#tronconTable th:last-child, #tronconTable td:last-child');
+  const formContainer = document.getElementById('form-container');
+  
+  actionCells.forEach(el => el.style.display = 'none');
+  if(formContainer) formContainer.style.display = 'none';
+
+  const opt = {
+    margin:       [10, 10, 10, 10],
+    filename:     'Rapport_' + pName + '.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    // إعادة إظهار العناصر بعد الانتهاء من استخراج الـ PDF
+    actionCells.forEach(el => el.style.display = '');
+    if(formContainer) formContainer.style.display = '';
+  });
+}
+
 function showToast(msg, type){
   const t = document.getElementById('toast');
   const ic = document.getElementById('toast-icon');
