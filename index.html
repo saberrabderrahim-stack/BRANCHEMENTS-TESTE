@@ -1,4 +1,4 @@
-"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -777,12 +777,4 @@ function showToast(msg,type){
 }
 </script>
 </body>
-</html>"""
-
-HTML = HTML.replace('LOGO_PLACEHOLDER', LOGO)
-
-with open('/home/claude/Troncons_AEP.html','w',encoding='utf-8') as f:
-    f.write(HTML)
-print("Done. Size:", len(HTML))
-PYEOF
-python3 /tmp/gen.py
+</html>
