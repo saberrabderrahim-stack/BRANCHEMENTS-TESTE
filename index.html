@@ -120,7 +120,7 @@ tr:hover td{background:#eef6ff;}
 <div id="login-page" class="login-bg">
   <div class="login-card">
     <div style="text-align:center;margin-bottom:20px;">
-      <img id="login-logo" src="" alt="SRM" style="height:80px;object-fit:contain;display:block;margin:0 auto 10px;">
+      <img id="login-logo" src="" alt="SRM" style="height:90px;object-fit:contain;display:block;margin:0 auto 12px;">
       <div style="width:60px;height:3px;margin:0 auto 12px;background:linear-gradient(90deg,var(--srm-blue),var(--srm-green),var(--srm-orange));border-radius:4px;"></div>
       <div style="font-size:11px;font-weight:700;color:var(--srm-text-muted);text-transform:uppercase;line-height:1.7;">
         Société Régionale Multiservices<br>Casablanca-Settat SA
@@ -156,7 +156,7 @@ tr:hover td{background:#eef6ff;}
   <div class="app-header">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:10px;">
-        <img id="app-logo" src="" alt="Logo" style="height:44px;object-fit:contain;">
+        <img id="app-logo" src="" alt="Logo" style="height:48px;object-fit:contain;">
         <div style="border-left:1px solid var(--srm-border);padding-left:10px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-size:12px;font-weight:900;color:var(--srm-blue);text-transform:uppercase;letter-spacing:1px;">SRM</span>
@@ -290,10 +290,10 @@ tr:hover td{background:#eef6ff;}
       <div style="margin-bottom:14px;">
         <label class="srm-label">Nombre de compteurs</label>
         <div class="radio-group" id="cpt-group">
-          <label class="radio-option" data-val="1"><input type="radio" name="compteurs" value="1">① 1</label>
-          <label class="radio-option" data-val="2"><input type="radio" name="compteurs" value="2">② 2</label>
-          <label class="radio-option" data-val="3"><input type="radio" name="compteurs" value="3">③ 3</label>
-          <label class="radio-option" data-val="4"><input type="radio" name="compteurs" value="4">④ 4</label>
+          <label class="radio-option" data-val="1"><input type="radio" name="compteurs" value="1"> 1</label>
+          <label class="radio-option" data-val="2"><input type="radio" name="compteurs" value="2"> 2</label>
+          <label class="radio-option" data-val="3"><input type="radio" name="compteurs" value="3"> 3</label>
+          <label class="radio-option" data-val="4"><input type="radio" name="compteurs" value="4"> 4</label>
           <label class="radio-option" data-val="Jonction"><input type="radio" name="compteurs" value="Jonction"><i class="fa-solid fa-link" style="font-size:11px;"></i> Jonction</label>
         </div>
       </div>
@@ -336,7 +336,7 @@ tr:hover td{background:#eef6ff;}
           <span class="section-icon" style="background:var(--srm-gray);color:var(--srm-text-muted);"><i class="fa-solid fa-table"></i></span>
           Registre des Tronçons
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="action-buttons-container">
           <input type="file" id="excel-file-input" style="display:none" onchange="handleExcelImport(event)">
           <button class="srm-btn btn-orange btn-sm" onclick="document.getElementById('excel-file-input').click()">
             <i class="fa-solid fa-file-import"></i> Importer XLSX
@@ -370,7 +370,7 @@ tr:hover td{background:#eef6ff;}
                 <th>Béton</th>
                 <th>TN</th>
                 <th>Date Saisie</th>
-                <th>Actions</th>
+                <th class="actions-col">Actions</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -384,7 +384,8 @@ tr:hover td{background:#eef6ff;}
                 <td id="foot-cs" style="color:var(--srm-text-muted);">0</td>
                 <td id="foot-bt" style="color:var(--srm-text-muted);">0</td>
                 <td id="foot-tn" style="color:var(--srm-text-muted);">0</td>
-                <td colspan="2"></td>
+                <td></td>
+                <td class="actions-col"></td>
               </tr>
             </tfoot>
           </table>
@@ -401,13 +402,8 @@ tr:hover td{background:#eef6ff;}
 </div>
 
 <script>
-const LOGO_B64 = 'data:image/png;base64,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';
-
-const USERS = {
-  "asaber":     { password:"Al@e16Lokmn23",  displayName:"A. SABER",     role:"Chargé d'Affaires" },
-  "bfathi":     { password:"Bfathi590",       displayName:"B. FATHI",     role:"Technicien" },
-  "lbencherki": { password:"Lbencherki2026", displayName:"L. BENCHERKI", role:"Responsable" }
-};
+// Nouveau logo Base64 intégré directement
+const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAACXBIWXMAAAsTAAALEwEAmpwYAAADp0lEQVR4nO3b23KCMBSG4X9FvP9bPVURbE8v5gAtoSgbe9bMc2ZgGvInm9wgpZQCgE8vXQEALIsgAsEgEAgEgUAgCAQCgSAsb67bXC6XwY9brVb9O2y77K67+h9B8f09HA7V9f6FfRAnI8EICBwBgSAQCASBYCCw6hK8A0eAeyAICBwBgSAQCASBwDoPDoFrIAgIHAHuwREgCAgcAYEgEAgEgcCqi8M8eAOCgMAtg0M8uAeOgMAR4B4IAgJHQCAIBAJBYM2DeyAIDASWwT0QBAQCqy4O8+AeOAIERYN7vPMeOAICp3MPDqF7IAgIHAHuwREgCAgcAYEgEAgEgcBaDoevNfHmegeOgEAgCATWfDj8bXEPBIFBYBncA0FAEFgG90AQEASWwT0QBAQCgXUeHALXQBAQOALcgyPAn8XpA4fANRAEBI4Ad+AIEAQEjoBAEAgEgUCYg+92eH/9/e+w7X6G93eI6R8EgcB6vCby+FpBexmOn+mO+y7fA0fAn3W6W+Gat8I1r667vO8g+C6CQ7z6XN+33+V9B8F3YVvBvLruevRdfofgMArbyvXb6Z5/RzCcwray7Sre8+9IIDitYFtF77jNruI9f3wX9v+wLdfNrmL/v36X30EQvgtbwbw62so+CAt7bCsIu+p6eXW46rYCcAnDtpzCMMw7fG0v6B67isMwhL7/6XfRVRzCMAyn73/6XXQVR2AIff/T76KrOALDKGx3GEYwDMPhg763v76wP8S+G0YQfAt9X/vC/hD7bhhB2IXt7wfbX9oE/v9gexCGYfR97QtHwEAgwAgEAsP5eH/pC4bAcD4SDAICYSCQYAQEgUAgwBAIBALC+Xg7gK9pBwICgUAgwBAIBIKwX0WwreAnmAsgEAgwAoJAwN0KBAKBgCDACAgCAUAgIAgEAAFBICAICAIBAIKAICAIBAAIBIJAICAICAIBQEAYCAQEgUAgIBAEAoBAIGD9T9D+E/T7mR9Y9B6F3v7bZ+jX9V0b7Lvd9R3O/7C+I3o7B99f2HZh2Fby7+rNfVfc7jC869Z+p7vevvvOf4f7Fm6z7yz8Owy3Wf9d86663XF4160wDLdZ/13zrrrdsftO10EQfNfrO6zvev+99O8wXGfXWfN/j7Srtuuuy//6IexvEXwXwXdhf0v0d47wXf+P0F8vCAgEgUAgCIQwDAv0m5pAEAixf99DIMS7ZwgEgUBYIP1mJhCexv7bYg6g6M7wSBAIxW8wAisqAsf+WwN9p+idMv7Y1V0vV3S9AOBj/AMAnA9mWh3bUQAAAABJRU5ErkJggg==';
 
 let editIndex = -1;
 let tableVisible = false;
@@ -540,7 +536,7 @@ function renderRow(row, troncon, dn, displayCpt, total, ch, pv, co, cs, bt, tn, 
     '<td style="font-weight:800;color:var(--srm-blue);">'+total+'</td>'+
     '<td>'+ch+'</td><td>'+pv+'</td><td>'+co+'</td><td>'+cs+'</td><td>'+bt+'</td><td>'+tn+'</td>'+
     '<td style="font-size:11px;color:var(--srm-text-muted);white-space:nowrap;">'+ts+'</td>'+
-    '<td style="white-space:nowrap;">'+
+    '<td class="actions-col" style="white-space:nowrap;">'+
       '<button class="srm-btn btn-edit btn-sm" onclick="editRow(this)" style="margin-right:4px;"><i class="fa-solid fa-pen"></i></button>'+
       '<button class="srm-btn btn-del btn-sm" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></button>'+
     '</td>';
@@ -798,23 +794,34 @@ function exportPDF() {
   const element = document.getElementById('pdf-content');
   const pName = document.getElementById('projectName').value.trim() || 'Projet_AEP';
   
-  const actionCells = document.querySelectorAll('#tronconTable th:last-child, #tronconTable td:last-child');
+  // Masquer les boutons et la colonne Actions avant impression
+  const actionCells = document.querySelectorAll('.actions-col');
   const formContainer = document.getElementById('form-container');
+  const actionButtons = document.getElementById('action-buttons-container');
   
   actionCells.forEach(el => el.style.display = 'none');
   if(formContainer) formContainer.style.display = 'none';
+  if(actionButtons) actionButtons.style.display = 'none';
+
+  // S'assurer que le tableau est visible pour html2pdf
+  const tableSection = document.getElementById('tableSection');
+  const initialTableState = tableSection.classList.contains('d-none');
+  tableSection.classList.remove('d-none');
 
   const opt = {
-    margin:       [10, 10, 10, 10],
+    margin:       [8, 8, 8, 8],
     filename:     'Rapport_' + pName + '.pdf',
     image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true },
+    html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
   };
 
   html2pdf().set(opt).from(element).save().then(() => {
+    // Restaurer l'affichage initial après impression
     actionCells.forEach(el => el.style.display = '');
     if(formContainer) formContainer.style.display = '';
+    if(actionButtons) actionButtons.style.display = '';
+    if(initialTableState) tableSection.classList.add('d-none');
   });
 }
 
